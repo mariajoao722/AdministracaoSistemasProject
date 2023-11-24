@@ -13,17 +13,23 @@ resource "google_compute_instance" "osd1" {
     network = "default"
   }
 
-  # Provisioner for Ceph OSD configuration
-  provisioner "remote-exec" {
-    inline = [
-      "sudo apt-get update",
-      "sudo apt-get install -y ceph",
-      "sudo mkdir /var/local/osd-data",
-      # Replace /dev/sdb with the actual disk you want to use for OSD
-      "sudo ceph-deploy osd create --data /dev/sdb ceph-node-1",
-      # Additional OSD configuration commands
-    ]
-  }
+  # # Provisioner for Ceph OSD configuration
+  # provisioner "remote-exec" {
+  #   inline = [
+  #     "sudo apt-get update",
+  #     "sudo apt-get install -y ceph",
+  #     "sudo mkdir /var/local/osd-data",
+  #     # Replace /dev/sdb with the actual disk you want to use for OSD
+  #     "sudo ceph-deploy osd create --data /dev/sdb ceph-node-1",
+  #     # Additional OSD configuration commands
+  #   ]
+  # }
+
+  metadata_startup_script = <<-SCRIPT
+    #!/bin/bash
+    sudo apt-get update
+    sudo-apt-get install -y ceph
+  SCRIPT
 }
 
 resource "google_compute_instance" "osd2" {
