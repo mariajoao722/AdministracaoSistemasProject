@@ -13,7 +13,17 @@ resource "google_compute_instance" "osd1" {
 
   network_interface {
     network = "default"
+    # Add access_config with a static external IP address
+    access_config {
+      
+    }
   }
+
+  # Add a service_account block
+ /* service_account {
+    email  = "terraform@projectadms.iam.gserviceaccount.com"
+    scopes = ["cloud platform"]
+  }*/
 
   # # Provisioner for Ceph OSD configuration
   # provisioner "remote-exec" {
@@ -27,12 +37,7 @@ resource "google_compute_instance" "osd1" {
   #   ]
   # }
 
-  metadata_startup_script = <<-SCRIPT
-    #!/bin/bash
-    sudo apt-get update
-    sudo apt-get install -y ceph
-    sudo apt-get install -y openssh-client
-  SCRIPT
+  metadata_startup_script = file("scripts/scriptOSD.sh") 
 }
 
 resource "google_compute_instance" "osd2" {
@@ -46,9 +51,19 @@ resource "google_compute_instance" "osd2" {
     }
   }
 
-  network_interface {
+   network_interface {
     network = "default"
+    # Add access_config with a static external IP address
+    access_config {
+      
+    }
   }
+
+  # Add a service_account block
+/* service_account {
+    email  = "terraform@projectadms.iam.gserviceaccount.com"
+    scopes = ["cloud platform"]
+  }*/
    # Provisioner for Ceph OSD configuration
   #provisioner "remote-exec" {
     #inline = [
@@ -60,12 +75,7 @@ resource "google_compute_instance" "osd2" {
       # Additional OSD configuration commands
     #]
   #}
-  metadata_startup_script = <<-SCRIPT
-    #!/bin/bash
-    sudo apt-get update
-    sudo apt-get install -y ceph
-    sudo apt-get install -y openssh-client
-  SCRIPT
+  metadata_startup_script = file("scripts/scriptOSD.sh") 
 }
 
 resource "google_compute_instance" "mon" {
@@ -79,9 +89,19 @@ resource "google_compute_instance" "mon" {
     }
   }
 
-  network_interface {
+   network_interface {
     network = "default"
+    # Add access_config with a static external IP address
+    access_config {
+      
+    }
   }
+
+  # Add a service_account block
+/* service_account {
+    email  = "terraform@projectadms.iam.gserviceaccount.com"
+    scopes = ["cloud platform"]
+  }*/
 
   #provisioner "remote-exec" {
    # inline = [
@@ -92,12 +112,7 @@ resource "google_compute_instance" "mon" {
       # Additional MON configuration commands
     #]
   #}
-  metadata_startup_script = <<-SCRIPT
-    #!/bin/bash
-    sudo apt-get update
-    sudo apt-get install -y ceph
-    sudo apt-get install -y openssh-client
-  SCRIPT
+  metadata_startup_script = file("scripts/scriptMON.sh")
 }
 
 resource "google_compute_instance" "mjr" {
@@ -111,9 +126,19 @@ resource "google_compute_instance" "mjr" {
     }
   }
 
-  network_interface {
+   network_interface {
     network = "default"
+    # Add access_config with a static external IP address
+    access_config {
+      
+    }
   }
+
+ /* service_account {
+    email  = "terraform@projectadms.iam.gserviceaccount.com"
+    scopes = ["cloud platform"]
+  }*/
+
    # Provisioner for Ceph OSD configuration
   #provisioner "remote-exec" {
    # inline = [
@@ -124,12 +149,7 @@ resource "google_compute_instance" "mjr" {
       # Additional MGR configuration commands
     #]
   #}
-  metadata_startup_script = <<-SCRIPT
-    #!/bin/bash
-    sudo apt-get update
-    sudo apt-get install -y ceph
-    sudo apt-get install -y openssh-client
-  SCRIPT
+  metadata_startup_script = file("scripts/scriptMJR.sh")
 }
 
 resource "google_compute_instance" "backup" {
@@ -143,15 +163,21 @@ resource "google_compute_instance" "backup" {
     }
   }
 
-  network_interface {
+   network_interface {
     network = "default"
+    # Add access_config with a static external IP address
+    access_config {
+      
+    }
   }
-  metadata_startup_script = <<-SCRIPT
-    #!/bin/bash
-    sudo apt-get update
-    sudo apt-get install -y ceph
-    sudo apt-get install -y openssh-client
-  SCRIPT
+
+  # Add a service_account block
+ /* service_account {
+    email  = "terraform@projectadms.iam.gserviceaccount.com"
+    scopes = ["cloud platform"]
+  }*/
+
+  metadata_startup_script = file("scripts/scriptBackup.sh")
 }
 
 resource "google_compute_instance" "rdb" {  # cliente
@@ -165,16 +191,23 @@ resource "google_compute_instance" "rdb" {  # cliente
     }
   }
 
-  network_interface {
+  
+   network_interface {
     network = "default"
+    # Add access_config with a static external IP address
+    access_config {
+      
+    }
   }
+
+  # Add a service_account block
+  /* service_account {
+    email  = "terraform@projectadms.iam.gserviceaccount.com"
+    scopes = ["cloud platform"]
+  }*/
+
   #sudo apt-get install -y openssh-client
   #funciona como servidor?
-  metadata_startup_script = <<-SCRIPT
-    #!/bin/bash
-    sudo apt-get update
-    sudo apt-get install -y ceph
-    
-    sudo apt-get install -y openssh-server
-  SCRIPT
+  metadata_startup_script = file("scripts/scriptRDB.sh")
+
 }
