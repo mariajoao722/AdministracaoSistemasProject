@@ -3,18 +3,18 @@
     sudo apt-get update
     sudo apt-get install -y ceph
     sudo apt-get install -y openssh-client
-    uui = $(uuidgen)
+    uui=$(uuidgen)
     # Create or update ceph.conf
     cat <<EOF > /etc/ceph/ceph.conf
     [global]
     # specify cluster network for monitoring
-    cluster network = 10.0.0.0/24
+    cluster network = 10.204.0.0/24
     # specify public network
-    public network = 10.0.0.0/24
+    public network = 10.204.0.0/24
     # specify UUID generated above
-    fsid = $uuid
+    fsid = $uui
     # specify IP address of Monitor Daemon
-    mon host = 10.0.0.51
+    mon host = 10.204.0.34
     # specify Hostname of Monitor Daemon
     mon initial members = node01
     osd pool default crush rule = -1
