@@ -2,6 +2,9 @@
 sudo apt-get update
 sudo apt-get install -y ceph
 sudo apt-get install -y openssh-client
+sudo apt-get install -y openssh-server
+
+
 
 #scp /etc/ceph/ceph.conf node03:/etc/ceph/ceph.conf
 #scp /etc/ceph/ceph.client.admin.keyring node03:/etc/ceph

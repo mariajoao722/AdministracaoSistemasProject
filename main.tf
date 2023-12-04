@@ -1,5 +1,3 @@
-#change to debian 11
-
 resource "google_compute_instance" "osd1" {
   name         = var.instance_name
   machine_type = "e2-micro"

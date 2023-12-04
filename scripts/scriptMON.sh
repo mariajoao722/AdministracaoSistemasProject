@@ -2,10 +2,10 @@
 sudo apt-get update
 sudo apt-get install -y ceph
 sudo apt-get install -y openssh-client
+sudo apt-get install -y openssh-server
 
 uui=$(uuidgen)
 HOSTNAME=$(hostname)
-IP_ADDR=$(hostname -I)
 
 # Create or update ceph.conf
 cat <<EOF > /etc/ceph/ceph.conf
@@ -76,27 +76,26 @@ sudo ceph mon enable-msgr2 | tee -a $outfile
 echo "after" | tee -a $outfile
 sudo ceph config set mon auth_allow_insecure_global_id_reclaim false
 
+sudo firewall-cmd --zone=public --add-service=ceph-mon
+sudo firewall-cmd --zone=public --add-service=ceph-mon --permanent
+
+
 # create a directory for Manager Daemon
 # directory name ⇒ (Cluster Name)-(Node Name)
 sudo mkdir /var/lib/ceph/mgr/ceph-mon
 
-echo "after1" | tee -a $outfile
-# create auth key
 sudo ceph auth get-or-create mgr.$NODENAME mon 'allow profile mgr' osd 'allow *' mds 'allow *'
 
-echo "after2" | tee -a $outfile
+key=$(sudo ceph auth get-or-create mgr.mon)
 
-sudo ceph auth get-or-create mgr.mon | tee /etc/ceph/ceph.mgr.admin.keyring
+sudo cat <<EOF > /etc/ceph/ceph.mgr.admin.keyring
+$key
+EOF
+
 sudo cp /etc/ceph/ceph.mgr.admin.keyring /var/lib/ceph/mgr/ceph-mon/keyring
 sudo chown ceph. /etc/ceph/ceph.mgr.admin.keyring
 sudo chown -R ceph. /var/lib/ceph/mgr/ceph-mon
 sudo systemctl enable --now ceph-mgr@$NODENAME
-
-echo "after3" | tee -a $outfile
-
-#sudo chown -R mjmarquespais:mjmarquespais /var/lib/ceph/mon/ceph-mon
-#sudo chown -R mjmarquespais:mjmarquespais /var/lib/ceph/mgr/ceph-mon
-
 
 #chown ceph. /etc/ceph/ceph.* /var/lib/ceph/bootstrap-osd/*; \
 #parted --script /dev/sdb 'mklabel gpt'; \
