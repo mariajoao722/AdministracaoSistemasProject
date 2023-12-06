@@ -14,6 +14,13 @@ resource "google_compute_disk" "default1" {
   size = "10"
 }
 
+resource "google_compute_disk" "default2" {
+  name = "dbsss"
+  type = "pd-standard"
+  zone = "europe-southwest1-c"
+  size = "10"
+}
+
 resource "google_compute_instance" "osd1" {
   name         = var.instance_name
   machine_type = "e2-micro"
@@ -102,6 +109,11 @@ resource "google_compute_instance" "mon" {
     }
     # Assign a static internal IP address
     network_ip = "10.204.0.12"
+  }
+
+  attached_disk {
+    source      = google_compute_disk.default2.id
+    device_name = google_compute_disk.default2.name
   }
 
   # Add a service_account block

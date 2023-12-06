@@ -1,33 +1,27 @@
 #!/bin/bash
 sudo apt-get update
 sudo apt-get install -y ceph
-sudo apt-get install -y openssh-client
-sudo apt-get install -y openssh-server
+
+ssh-keygen -C publicMethod4 -f /home/mjmarquespais/.ssh/publicMethod4 -N "" -q
+
+# sudo chown ceph. /etc/ceph/ceph.*
 
 outfile=/home/mjmarquespais/debug.txt
 
-# Create or update ceph.conf
-cat <<EOF > /etc/ceph/ceph.conf
-[global]
-# Enable the manager module
-mgr module enabled = true
-
-# Specify the MGR module
-mgr module = true
-EOF
-
-sudo mkdir /var/lib/ceph/mgr/ceph-mjr
+sudo mkdir /var/lib/ceph/mgr/ceph-mon
 
 echo "after1" | tee -a $outfile
 # create auth key
-sudo ceph auth get-or-create mgr.mjr mon 'allow profile mgr' osd 'allow *' mds 'allow *'
-sudo chmod +r /etc/ceph/ceph.mgr.mjr.keyring
+sudo ceph auth get-or-create mgr.mon mon 'allow profile mgr' osd 'allow *' mds 'allow *'
 
+sudo ceph auth get-or-create mgr.mon | sudo tee /etc/ceph/ceph.mgr.admin.keyring
+
+cat <<EOF > /home/mjmarquespais/script.sh
+#!/bin/bash
+sudo cp /etc/ceph/ceph.mgr.admin.keyring /var/lib/ceph/mgr/ceph-mon/keyring
+sudo chown ceph. /etc/ceph/ceph.mgr.admin.keyring
+sudo chown -R ceph. /var/lib/ceph/mgr/ceph-mon
+sudo systemctl enable --now ceph-mgr@mon
+EOF
 
 echo "after2" | tee -a $outfile
-
-#sudo ceph auth get-or-create mgr.mjr | tee /etc/ceph/ceph.mgr.admin.keyring
-#sudo cp /etc/ceph/ceph.mgr.admin.keyring /var/lib/ceph/mgr/ceph-mjr/keyring
-#sudo chown ceph. /etc/ceph/ceph.mgr.admin.keyring
-#sudo chown -R ceph. /var/lib/ceph/mgr/ceph-mjr
-#sudo systemctl enable --now ceph-mgr@mgr

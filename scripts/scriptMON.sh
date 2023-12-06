@@ -1,8 +1,10 @@
 #!/bin/bash
 sudo apt-get update
 sudo apt-get install -y ceph
-sudo apt-get install -y openssh-client
-sudo apt-get install -y openssh-server
+
+echo "feito" | tee -a /home/mjmarquespais/debug.txt
+
+ssh-keygen -C publicMethod -f /home/mjmarquespais/.ssh/publicMethod -N "" -q
 
 uui=$(uuidgen)
 HOSTNAME=$(hostname)
@@ -29,6 +31,18 @@ osd pool default crush rule = -1
 auth_cluster required = cephx
 auth_service required = cephx
 auth_client required = cephx
+
+# mon.(Node name)
+[mon.mon]
+
+# specify Hostname of Monitor Daemon
+host = mon
+
+# specify IP address of Monitor Daemon
+mon addr = 10.204.0.12
+
+# allow to delete pools
+mon allow pool delete = true
 EOF
 
 # Generate secret key for Cluster monitoring
@@ -86,18 +100,73 @@ sudo mkdir /var/lib/ceph/mgr/ceph-mon
 
 sudo ceph auth get-or-create mgr.$NODENAME mon 'allow profile mgr' osd 'allow *' mds 'allow *'
 
-key=$(sudo ceph auth get-or-create mgr.mon)
-
-sudo cat <<EOF > /etc/ceph/ceph.mgr.admin.keyring
-$key
-EOF
+sudo ceph auth get-or-create mgr.mon | sudo tee /etc/ceph/ceph.mgr.admin.keyring
 
 sudo cp /etc/ceph/ceph.mgr.admin.keyring /var/lib/ceph/mgr/ceph-mon/keyring
 sudo chown ceph. /etc/ceph/ceph.mgr.admin.keyring
 sudo chown -R ceph. /var/lib/ceph/mgr/ceph-mon
 sudo systemctl enable --now ceph-mgr@$NODENAME
 
-#chown ceph. /etc/ceph/ceph.* /var/lib/ceph/bootstrap-osd/*; \
-#parted --script /dev/sdb 'mklabel gpt'; \
-#parted --script /dev/sdb "mkpart primary 0% 100%"; \
-#ceph-volume lvm create --data /dev/sdb1
+
+cat <<EOF > /home/mjmarquespais/scriptosd1.sh
+#!/bin/bash
+sudo scp -i ~/.ssh/publicMethod /etc/ceph/ceph.conf publicMethod@10.204.0.10:/tmp/
+sudo ssh -i ~/.ssh/publicMethod publicMethod@10.204.0.10 "sudo mv /tmp/ceph.conf /etc/ceph/ceph.conf"
+
+sudo scp -i ~/.ssh/publicMethod /etc/ceph/ceph.client.admin.keyring publicMethod@10.204.0.10:/tmp/
+sudo ssh -i ~/.ssh/publicMethod publicMethod@10.204.0.10 "sudo mv /tmp/ceph.client.admin.keyring  /etc/ceph/ceph.client.admin.keyring"
+
+sudo scp -i ~/.ssh/publicMethod /var/lib/ceph/bootstrap-osd/ceph.keyring publicMethod@10.204.0.10:/tmp/
+sudo ssh -i ~/.ssh/publicMethod publicMethod@10.204.0.10 "sudo mv /tmp/ceph.keyring /var/lib/ceph/bootstrap-osd/ceph.keyring"
+EOF
+
+cat <<EOF > /home/mjmarquespais/scriptosd2.sh
+#!/bin/bash
+sudo scp -i ~/.ssh/publicMethod /etc/ceph/ceph.conf publicMethod@10.204.0.11:/tmp/
+sudo ssh -i ~/.ssh/publicMethod publicMethod@10.204.0.11 "sudo mv /tmp/ceph.conf /etc/ceph/ceph.conf"
+
+sudo scp -i ~/.ssh/publicMethod /etc/ceph/ceph.client.admin.keyring publicMethod@10.204.0.11:/tmp/
+sudo ssh -i ~/.ssh/publicMethod publicMethod@10.204.0.11 "sudo mv /tmp/ceph.client.admin.keyring  /etc/ceph/ceph.client.admin.keyring"
+
+sudo scp -i ~/.ssh/publicMethod /var/lib/ceph/bootstrap-osd/ceph.keyring publicMethod@10.204.0.11:/tmp/
+sudo ssh -i ~/.ssh/publicMethod publicMethod@10.204.0.11 "sudo mv /tmp/ceph.keyring /var/lib/ceph/bootstrap-osd/ceph.keyring"
+EOF
+
+
+
+cat <<EOF > /home/mjmarquespais/script.sh
+#!/bin/bash
+sudo chown ceph. /etc/ceph/ceph.* /var/lib/ceph/bootstrap-osd/ceph.keyring
+sudo parted --script /dev/sdb 'mklabel gpt'
+sudo parted --script /dev/sdb "mkpart primary 0% 100%"
+sudo ceph-volume lvm create --data /dev/sdb1
+EOF
+
+
+cat <<EOF > /home/mjmarquespais/scriptrdb.sh
+#!/bin/bash
+sudo scp -i ~/.ssh/publicMethod /etc/ceph/ceph.conf publicMethod@10.204.0.15:/tmp/
+sudo ssh -i ~/.ssh/publicMethod publicMethod@10.204.0.15 "sudo mv /tmp/ceph.conf /etc/ceph/ceph.conf"
+
+sudo scp -i ~/.ssh/publicMethod /etc/ceph/ceph.client.admin.keyring publicMethod@10.204.0.15:/tmp/
+sudo ssh -i ~/.ssh/publicMethod publicMethod@10.204.0.15 "sudo mv /tmp/ceph.client.admin.keyring  /etc/ceph/ceph.client.admin.keyring"
+
+# sudo chown ceph. /etc/ceph/ceph.*
+EOF
+
+cat <<EOF > /home/mjmarquespais/scriptmgr.sh
+#!/bin/bash
+sudo scp -i ~/.ssh/publicMethod /etc/ceph/ceph.conf publicMethod@10.204.0.13:/tmp/
+sudo ssh -i ~/.ssh/publicMethod publicMethod@10.204.0.13 "sudo mv /tmp/ceph.conf /etc/ceph/ceph.conf"
+
+sudo scp -i ~/.ssh/publicMethod /etc/ceph/ceph.client.admin.keyring publicMethod@10.204.0.13:/tmp/
+sudo ssh -i ~/.ssh/publicMethod publicMethod@10.204.0.13 "sudo mv /tmp/ceph.client.admin.keyring  /etc/ceph/ceph.client.admin.keyring"
+
+# sudo chown ceph. /etc/ceph/ceph.*
+EOF
+
+sudo chmod +x /home/mjmarquespais/scriptosd1.sh
+sudo chmod +x /home/mjmarquespais/scriptosd2.sh
+sudo chmod +x /home/mjmarquespais/script.sh
+sudo chmod +x /home/mjmarquespais/scriptrdb.sh
+sudo chmod +x /home/mjmarquespais/scriptmgr.sh
