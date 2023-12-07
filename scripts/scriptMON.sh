@@ -2,6 +2,10 @@
 sudo apt-get update
 sudo apt-get install -y ceph
 
+# https://www.youtube.com/watch?v=HDEUdfS-S40
+# https://docs.ceph.com/en/latest/install/manual-deployment/
+# https://www.server-world.info/en/note?os=Debian_11&p=ceph14&f=1
+
 echo "feito" | tee -a /home/mjmarquespais/debug.txt
 
 ssh-keygen -C publicMethod -f /home/mjmarquespais/.ssh/publicMethod -N "" -q
