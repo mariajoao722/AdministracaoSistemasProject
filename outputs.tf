@@ -22,8 +22,3 @@ output "instance_id5" {
   description = "The ID of instance 5"
   value       = google_compute_instance.backup.instance_id
 }
-
-output "instance_id6" {
-  description = "The ID of instance 5"
-  value       = google_compute_instance.rdb.instance_id
-}

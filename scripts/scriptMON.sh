@@ -1,12 +1,13 @@
 #!/bin/bash
-sudo apt-get update
 sudo apt-get install -y ceph
 
 # https://www.youtube.com/watch?v=HDEUdfS-S40
 # https://docs.ceph.com/en/latest/install/manual-deployment/
 # https://www.server-world.info/en/note?os=Debian_11&p=ceph14&f=1
 
-echo "feito" | tee -a /home/mjmarquespais/debug.txt
+outfile=/home/mjmarquespais/debug.txt
+
+echo "feito" | tee -a $outfile
 
 ssh-keygen -C publicMethod -f /home/mjmarquespais/.ssh/publicMethod -N "" -q
 
@@ -68,7 +69,7 @@ NODENAME=$(grep "^mon initial" /etc/ceph/ceph.conf | awk {'print $NF'})
 NODEIP=$(grep "^mon host" /etc/ceph/ceph.conf | awk {'print $NF'})
 monmaptool --create --add $NODENAME $NODEIP --fsid $FSID /etc/ceph/monmap
 
-outfile=/home/mjmarquespais/debug.txt
+
 
 echo $HOSTNAME | tee -a $outfile  # mon
 echo $uui | tee -a $outfile
@@ -149,11 +150,11 @@ EOF
 
 cat <<EOF > /home/mjmarquespais/scriptrdb.sh
 #!/bin/bash
-sudo scp -i ~/.ssh/publicMethod /etc/ceph/ceph.conf publicMethod@10.204.0.15:/tmp/
-sudo ssh -i ~/.ssh/publicMethod publicMethod@10.204.0.15 "sudo mv /tmp/ceph.conf /etc/ceph/ceph.conf"
+sudo scp -i ~/.ssh/publicMethod /etc/ceph/ceph.conf publicMethod@10.204.0.14:/tmp/
+sudo ssh -i ~/.ssh/publicMethod publicMethod@10.204.0.14 "sudo mv /tmp/ceph.conf /etc/ceph/ceph.conf"
 
-sudo scp -i ~/.ssh/publicMethod /etc/ceph/ceph.client.admin.keyring publicMethod@10.204.0.15:/tmp/
-sudo ssh -i ~/.ssh/publicMethod publicMethod@10.204.0.15 "sudo mv /tmp/ceph.client.admin.keyring  /etc/ceph/ceph.client.admin.keyring"
+sudo scp -i ~/.ssh/publicMethod /etc/ceph/ceph.client.admin.keyring publicMethod@10.204.0.14:/tmp/
+sudo ssh -i ~/.ssh/publicMethod publicMethod@10.204.0.14 "sudo mv /tmp/ceph.client.admin.keyring  /etc/ceph/ceph.client.admin.keyring"
 
 # sudo chown ceph. /etc/ceph/ceph.*
 EOF

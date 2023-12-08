@@ -27,9 +27,3 @@ variable "instance_name5" {
   type        = string
   default     = "backup"
 }
-
-variable "instance_name6" {
-  description = "Name of the instance"
-  type        = string
-  default     = "rbd"
-}

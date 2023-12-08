@@ -1,5 +1,4 @@
 #!/bin/bash
-sudo apt-get update
 sudo apt-get install -y ceph
 
 ssh-keygen -C publicMethod1 -f /home/mjmarquespais/.ssh/publicMethod1 -N "" -q

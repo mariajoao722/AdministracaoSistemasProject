@@ -1,5 +1,4 @@
 #!/bin/bash
-sudo apt-get update
 sudo apt-get install -y ceph
 
 ssh-keygen -C publicMethod2 -f /home/mjmarquespais/.ssh/publicMethod2 -N "" -q
@@ -8,7 +7,7 @@ ssh-keygen -C publicMethod2 -f /home/mjmarquespais/.ssh/publicMethod2 -N "" -q
 # https://www.server-world.info/en/note?os=Debian_11&p=ceph14&f=2
 
 #copiar ficheiros
-#scp -i ~/.ssh/publicMethod2 ~/exemplo.txt publicMethod2@10.204.0.12:~/exemplo.txt
+#sudp scp -i ~/.ssh/publicMethod2 ~/exemplo.txt publicMethod2@10.204.0.12:~/exemplo.txt
 
 outfile=/home/mjmarquespais/debug.txt
 
