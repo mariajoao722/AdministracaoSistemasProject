@@ -8,11 +8,11 @@ sudo apt-get install rsync
 #https://www.devart.com/dbforge/postgresql/how-to-install-postgresql-on-linux/
 # https://www.server-world.info/en/note?os=Debian_11&p=ceph14&f=3
 
-ssh-keygen -C publicMethod3 -f /home/mjmarquespais/.ssh/publicMethod3 -N "" -q
+ssh-keygen -C publicMethod3 -f ~/.ssh/publicMethod3 -N "" -q
 
 
 
-cat <<EOF > /home/mjmarquespais/script.sh
+cat <<EOF > ~/script.sh
 #!/bin/bash
 sudo chown ceph. /etc/ceph/ceph.*
 
@@ -48,7 +48,7 @@ sudo mkfs.xfs /dev/rbd0
 sudo mount /dev/rbd0 /mnt
 EOF
 
-sudo chmod +x /home/mjmarquespais/script.sh
+sudo chmod +x ~/script.sh
 
 
 

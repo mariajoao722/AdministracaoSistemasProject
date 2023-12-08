@@ -6,9 +6,9 @@ sudo apt-get install -y ceph
 # https://docs.ceph.com/en/latest/install/manual-deployment/
 # https://www.server-world.info/en/note?os=Debian_11&p=ceph14&f=1
 
-echo "feito" | tee -a /home/mjmarquespais/debug.txt
+echo "feito" | tee -a ~/debug.txt
 
-ssh-keygen -C publicMethod -f /home/mjmarquespais/.ssh/publicMethod -N "" -q
+ssh-keygen -C publicMethod -f ~/.ssh/publicMethod -N "" -q
 
 uui=$(uuidgen)
 HOSTNAME=$(hostname)
@@ -68,7 +68,7 @@ NODENAME=$(grep "^mon initial" /etc/ceph/ceph.conf | awk {'print $NF'})
 NODEIP=$(grep "^mon host" /etc/ceph/ceph.conf | awk {'print $NF'})
 monmaptool --create --add $NODENAME $NODEIP --fsid $FSID /etc/ceph/monmap
 
-outfile=/home/mjmarquespais/debug.txt
+outfile=~/debug.txt
 
 echo $HOSTNAME | tee -a $outfile  # mon
 echo $uui | tee -a $outfile
@@ -112,7 +112,7 @@ sudo chown -R ceph. /var/lib/ceph/mgr/ceph-mon
 sudo systemctl enable --now ceph-mgr@$NODENAME
 
 
-cat <<EOF > /home/mjmarquespais/scriptosd1.sh
+cat <<EOF > ~/scriptosd1.sh
 #!/bin/bash
 sudo scp -i ~/.ssh/publicMethod /etc/ceph/ceph.conf publicMethod@10.204.0.10:/tmp/
 sudo ssh -i ~/.ssh/publicMethod publicMethod@10.204.0.10 "sudo mv /tmp/ceph.conf /etc/ceph/ceph.conf"
@@ -124,7 +124,7 @@ sudo scp -i ~/.ssh/publicMethod /var/lib/ceph/bootstrap-osd/ceph.keyring publicM
 sudo ssh -i ~/.ssh/publicMethod publicMethod@10.204.0.10 "sudo mv /tmp/ceph.keyring /var/lib/ceph/bootstrap-osd/ceph.keyring"
 EOF
 
-cat <<EOF > /home/mjmarquespais/scriptosd2.sh
+cat <<EOF > ~/scriptosd2.sh
 #!/bin/bash
 sudo scp -i ~/.ssh/publicMethod /etc/ceph/ceph.conf publicMethod@10.204.0.11:/tmp/
 sudo ssh -i ~/.ssh/publicMethod publicMethod@10.204.0.11 "sudo mv /tmp/ceph.conf /etc/ceph/ceph.conf"
@@ -138,7 +138,7 @@ EOF
 
 
 
-cat <<EOF > /home/mjmarquespais/script.sh
+cat <<EOF > ~/script.sh
 #!/bin/bash
 sudo chown ceph. /etc/ceph/ceph.* /var/lib/ceph/bootstrap-osd/ceph.keyring
 sudo parted --script /dev/sdb 'mklabel gpt'
@@ -147,7 +147,7 @@ sudo ceph-volume lvm create --data /dev/sdb1
 EOF
 
 
-cat <<EOF > /home/mjmarquespais/scriptrdb.sh
+cat <<EOF > ~/scriptrdb.sh
 #!/bin/bash
 sudo scp -i ~/.ssh/publicMethod /etc/ceph/ceph.conf publicMethod@10.204.0.15:/tmp/
 sudo ssh -i ~/.ssh/publicMethod publicMethod@10.204.0.15 "sudo mv /tmp/ceph.conf /etc/ceph/ceph.conf"
@@ -158,7 +158,7 @@ sudo ssh -i ~/.ssh/publicMethod publicMethod@10.204.0.15 "sudo mv /tmp/ceph.clie
 # sudo chown ceph. /etc/ceph/ceph.*
 EOF
 
-cat <<EOF > /home/mjmarquespais/scriptmgr.sh
+cat <<EOF > ~/scriptmgr.sh
 #!/bin/bash
 sudo scp -i ~/.ssh/publicMethod /etc/ceph/ceph.conf publicMethod@10.204.0.13:/tmp/
 sudo ssh -i ~/.ssh/publicMethod publicMethod@10.204.0.13 "sudo mv /tmp/ceph.conf /etc/ceph/ceph.conf"
@@ -169,8 +169,8 @@ sudo ssh -i ~/.ssh/publicMethod publicMethod@10.204.0.13 "sudo mv /tmp/ceph.clie
 # sudo chown ceph. /etc/ceph/ceph.*
 EOF
 
-sudo chmod +x /home/mjmarquespais/scriptosd1.sh
-sudo chmod +x /home/mjmarquespais/scriptosd2.sh
-sudo chmod +x /home/mjmarquespais/script.sh
-sudo chmod +x /home/mjmarquespais/scriptrdb.sh
-sudo chmod +x /home/mjmarquespais/scriptmgr.sh
+sudo chmod +x ~/scriptosd1.sh
+sudo chmod +x ~/scriptosd2.sh
+sudo chmod +x ~/script.sh
+sudo chmod +x ~/scriptrdb.sh
+sudo chmod +x ~/scriptmgr.sh

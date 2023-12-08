@@ -2,11 +2,11 @@
 sudo apt-get update
 sudo apt-get install -y ceph
 
-ssh-keygen -C publicMethod4 -f /home/mjmarquespais/.ssh/publicMethod4 -N "" -q
+ssh-keygen -C publicMethod4 -f ~/.ssh/publicMethod4 -N "" -q
 
 # sudo chown ceph. /etc/ceph/ceph.*
 
-outfile=/home/mjmarquespais/debug.txt
+outfile=~/debug.txt
 
 sudo mkdir /var/lib/ceph/mgr/ceph-mon
 
@@ -16,7 +16,7 @@ sudo ceph auth get-or-create mgr.mon mon 'allow profile mgr' osd 'allow *' mds '
 
 sudo ceph auth get-or-create mgr.mon | sudo tee /etc/ceph/ceph.mgr.admin.keyring
 
-cat <<EOF > /home/mjmarquespais/script.sh
+cat <<EOF > ~/script.sh
 #!/bin/bash
 sudo cp /etc/ceph/ceph.mgr.admin.keyring /var/lib/ceph/mgr/ceph-mon/keyring
 sudo chown ceph. /etc/ceph/ceph.mgr.admin.keyring

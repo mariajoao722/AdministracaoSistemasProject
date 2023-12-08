@@ -5,7 +5,7 @@ sudo apt-get install rsync
 
 #https://www.digitalocean.com/community/tutorials/how-to-use-rsync-to-sync-local-and-remote-directories-pt
 
-ssh-keygen -C publicMethod5 -f /home/mjmarquespais/.ssh/publicMethod5 -N "" -q
+ssh-keygen -C publicMethod5 -f ~/.ssh/publicMethod5 -N "" -q
 
 # sincronizar os ficheiros dentro da maquina backup
 # rsync -a dir3/ dir2
