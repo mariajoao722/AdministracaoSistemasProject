@@ -1,5 +1,6 @@
 #!/bin/bash
 sudo apt-get install -y ceph
+sudo apt-get install rsync
 
 # https://www.youtube.com/watch?v=HDEUdfS-S40
 # https://docs.ceph.com/en/latest/install/manual-deployment/
@@ -155,8 +156,6 @@ sudo ssh -i ~/.ssh/publicMethod publicMethod@10.204.0.14 "sudo mv /tmp/ceph.conf
 
 sudo scp -i ~/.ssh/publicMethod /etc/ceph/ceph.client.admin.keyring publicMethod@10.204.0.14:/tmp/
 sudo ssh -i ~/.ssh/publicMethod publicMethod@10.204.0.14 "sudo mv /tmp/ceph.client.admin.keyring  /etc/ceph/ceph.client.admin.keyring"
-
-# sudo chown ceph. /etc/ceph/ceph.*
 EOF
 
 cat <<EOF > /home/mjmarquespais/scriptmgr.sh
@@ -166,8 +165,14 @@ sudo ssh -i ~/.ssh/publicMethod publicMethod@10.204.0.13 "sudo mv /tmp/ceph.conf
 
 sudo scp -i ~/.ssh/publicMethod /etc/ceph/ceph.client.admin.keyring publicMethod@10.204.0.13:/tmp/
 sudo ssh -i ~/.ssh/publicMethod publicMethod@10.204.0.13 "sudo mv /tmp/ceph.client.admin.keyring  /etc/ceph/ceph.client.admin.keyring"
+EOF
 
-# sudo chown ceph. /etc/ceph/ceph.*
+cat <<EOF > /home/mjmarquespais/scriptBUPmon.sh
+#!/bin/bash
+# sudo rsync -av --delete --exclude='.ceph' -e "ssh -i /home/mjmarquespais/.ssh/publicMethod" publicMethod@10.204.0.14:/home/mjmarquespais/backup/MON/cephconf /etc/ceph 
+sudo rsync -av --exclude='.ceph' -e "ssh -i /home/mjmarquespais/.ssh/publicMethod" publicMethod@10.204.0.14:/home/mjmarquespais/backup/MON/cephconf/ /etc/ceph 
+
+sudo rsync -av --exclude='.ceph' -e "ssh -i /home/mjmarquespais/.ssh/publicMethod" publicMethod@10.204.0.14:/home/mjmarquespais/backup/MON/cephvar/ /var/lib/ceph 
 EOF
 
 sudo chmod +x /home/mjmarquespais/scriptosd1.sh
@@ -175,3 +180,8 @@ sudo chmod +x /home/mjmarquespais/scriptosd2.sh
 sudo chmod +x /home/mjmarquespais/script.sh
 sudo chmod +x /home/mjmarquespais/scriptrdb.sh
 sudo chmod +x /home/mjmarquespais/scriptmgr.sh
+sudo chmod +x /home/mjmarquespais/scriptBUPmon.sh
+
+# mudar permissões para o backup
+sudo chmod -R +rx /etc/ceph/
+sudo chmod -R +rx /var/lib/ceph/

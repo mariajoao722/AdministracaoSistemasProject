@@ -1,9 +1,9 @@
 #!/bin/bash
 sudo apt-get install -y ceph
+sudo apt-get install rsync
 
 ssh-keygen -C publicMethod4 -f /home/mjmarquespais/.ssh/publicMethod4 -N "" -q
 
-# sudo chown ceph. /etc/ceph/ceph.*
 
 outfile=/home/mjmarquespais/debug.txt
 
@@ -26,4 +26,18 @@ EOF
 
 sudo chmod +x /home/mjmarquespais/script.sh
 
+cat <<EOF > /home/mjmarquespais/scriptBUPmgr.sh
+#!/bin/bash
+
+sudo rsync -av --exclude='.ceph' -e "ssh -i /home/mjmarquespais/.ssh/publicMethod4" publicMethod4@10.204.0.14:/home/mjmarquespais/backup/MGR/cephconf/ /etc/ceph
+
+sudo rsync -av --exclude='.ceph' -e "ssh -i /home/mjmarquespais/.ssh/publicMethod4" publicMethod4@10.204.0.14:/home/mjmarquespais/backup/MGR/cephvar/ /var/lib/ceph
+EOF
+
+sudo chmod +x /home/mjmarquespais/scriptBUPmgr.sh
+
 echo "after2" | tee -a $outfile
+
+# mudar permissões para o backup
+sudo chmod -R +rx /etc/ceph/
+sudo chmod -R +rx /var/lib/ceph/
