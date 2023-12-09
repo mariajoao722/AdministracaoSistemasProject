@@ -96,6 +96,7 @@ sudo ceph config set mon auth_allow_insecure_global_id_reclaim false
 
 sudo firewall-cmd --zone=public --add-service=ceph-mon
 sudo firewall-cmd --zone=public --add-service=ceph-mon --permanent
+sudo firewall-cmd --reload
 
 
 # create a directory for Manager Daemon
