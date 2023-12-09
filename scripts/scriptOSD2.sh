@@ -1,5 +1,6 @@
 #!/bin/bash
 sudo apt-get install -y ceph
+sudo apt-get install rsync
 
 ssh-keygen -C publicMethod1 -f ~/.ssh/publicMethod1 -N "" -q
 
@@ -21,3 +22,17 @@ sudo ceph-volume lvm create --data /dev/sdb1
 EOF
 
 sudo chmod +x ~/script.sh
+
+cat <<EOF > ~/scriptBUPosd2.sh
+#!/bin/bash
+
+sudo rsync -av --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod1" publicMethod1@10.204.0.14:~/backup/OSD2/cephconf/ /etc/ceph 
+
+sudo rsync -av --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod1" publicMethod1@10.204.0.14:~/backup/OSD2/cephvar/ /var/lib/ceph 
+EOF
+
+sudo chmod +x ~/scriptBUPosd2.sh
+
+# mudar permissões para o backup
+sudo chmod -R +rx /etc/ceph/
+sudo chmod -R +rx /var/lib/ceph/

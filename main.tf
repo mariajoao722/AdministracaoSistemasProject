@@ -23,7 +23,6 @@ resource "google_compute_disk" "default2" {
   size = "10"
 }
 
-
 # create VM's
 
 resource "google_compute_instance" "osd1" {

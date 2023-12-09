@@ -86,6 +86,7 @@ sudo chmod +x ~/script.sh
 #\q
 
 
+
 cat <<EOF > ~/scriptpgAdmin.sh
 #!/bin/bash
 # pgAdmin repository
@@ -105,15 +106,64 @@ EOF
 
 sudo chmod +x ~/scriptpgAdmin.sh
 
+
+
+# BACKUP
+
+sudo mkdir -p backup/MON/cephconf
+sudo mkdir -p backup/MON/cephvar
+sudo mkdir -p backup/MGR/cephconf
+sudo mkdir -p backup/MGR/cephvar
+sudo mkdir -p backup/OSD1/cephconf
+sudo mkdir -p backup/OSD1/cephvar
+sudo mkdir -p backup/OSD2/cephconf
+sudo mkdir -p backup/OSD2/cephvar
+
+cat <<EOF > ~/scriptBUPmon.sh
+#!/bin/bash
+# sudo rsync -av --delete --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod3" publicMethod3@10.204.0.12:/etc/ceph ~/backup/MON/cephconf
+sudo rsync -av --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod3" publicMethod3@10.204.0.12:/etc/ceph/ ~/backup/MON/cephconf
+
+sudo rsync -av --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod3" publicMethod3@10.204.0.12:/var/lib/ceph/ ~/backup/MON/cephvar
+EOF
+
+cat <<EOF > ~/scriptBUPmgr.sh
+#!/bin/bash
+
+sudo rsync -av --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod3" publicMethod3@10.204.0.13:/etc/ceph/ ~/backup/MGR/cephconf
+
+sudo rsync -av --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod3" publicMethod3@10.204.0.13:/var/lib/ceph/ ~/backup/MGR/cephvar
+EOF
+
+cat <<EOF > ~/scriptBUPosd1.sh
+#!/bin/bash
+
+sudo rsync -av --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod3" publicMethod3@10.204.0.10:/etc/ceph/ ~/backup/OSD1/cephconf
+
+sudo rsync -av --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod3" publicMethod3@10.204.0.10:/var/lib/ceph/ ~/backup/OSD1/cephvar
+EOF
+
+cat <<EOF > ~/scriptBUPosd2.sh
+#!/bin/bash
+
+sudo rsync -av --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod3" publicMethod3@10.204.0.11:/etc/ceph/ ~/backup/OSD2/cephconf
+
+sudo rsync -av --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod3" publicMethod3@10.204.0.11:/var/lib/ceph/ ~/backup/OSD2/cephvar
+EOF
+
+sudo chmod +x ~/scriptBUPmon.sh
+sudo chmod +x ~/scriptBUPmgr.sh
+sudo chmod +x ~/scriptBUPosd1.sh
+sudo chmod +x ~/scriptBUPosd2.sh
+
+sudo chmod -R +rx ~/backup
+
 # Configure Web Server for pgAdmin4
 
 # sudo /usr/pgadmin4/bin/setup-web.sh
 # email: mjmarquespais@gmail.com
 # password: 1234567890
 
-# mover  pasta do postgreSQL para /dev/rbd0
-# sudo mv /var/lib/postgresql/ /dev/rbd0/
-
-# sincronizar os ficheiros dentro da maquina backup
-# rsync -a dir3/ dir2
+# mover  pasta do postgreSQL para pasta que dei mount
+# sudo mv /var/lib/postgresql/ /mnt
 

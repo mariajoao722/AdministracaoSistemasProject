@@ -1,9 +1,9 @@
 #!/bin/bash
 sudo apt-get install -y ceph
+sudo apt-get install rsync
 
 ssh-keygen -C publicMethod4 -f ~/.ssh/publicMethod4 -N "" -q
 
-# sudo chown ceph. /etc/ceph/ceph.*
 
 outfile=~/debug.txt
 
@@ -15,7 +15,7 @@ sudo ceph auth get-or-create mgr.mon mon 'allow profile mgr' osd 'allow *' mds '
 
 sudo ceph auth get-or-create mgr.mon | sudo tee /etc/ceph/ceph.mgr.admin.keyring
 
-cat <<EOF > ~/script.sh
+cat <<EOF > ~/script.s
 #!/bin/bash
 sudo chown ceph. /etc/ceph/ceph.*
 sudo cp /etc/ceph/ceph.mgr.admin.keyring /var/lib/ceph/mgr/ceph-mon/keyring
@@ -24,6 +24,20 @@ sudo chown -R ceph. /var/lib/ceph/mgr/ceph-mon
 sudo systemctl enable --now ceph-mgr@mon
 EOF
 
-sudo chmod +x /home/mjmarquespais/script.sh
+sudo chmod +x /mjmarquespais/script.sh
+
+cat <<EOF > mjmarquespais/scriptBUPmgr.sh
+#!/bin/bash
+
+sudo rsync -av --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod4" publicMethod4@10.204.0.14:~/backup/MGR/cephconf/ /etc/ceph
+
+sudo rsync -av --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod4" publicMethod4@10.204.0.14:~/backup/MGR/cephvar/ /var/lib/ceph
+EOF
+
+sudo chmod +x ~/scriptBUPmgr.sh
 
 echo "after2" | tee -a $outfile
+
+# mudar permissões para o backup
+sudo chmod -R +rx /etc/ceph/
+sudo chmod -R +rx /var/lib/ceph/

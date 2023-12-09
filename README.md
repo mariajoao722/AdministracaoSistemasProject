@@ -131,9 +131,9 @@ sudo systemctl start postgresql.service
 # https://www.rosehosting.com/blog/install-pgadmin-4-on-debian-10/
 # https://computingforgeeks.com/how-to-install-pgadmin4-on-debian/ 
 
-ssh-keygen -C publicMethod3 -f /home/mjmarquespais/.ssh/publicMethod3 -N "" -q
+ssh-keygen -C publicMethod3 -f ~/.ssh/publicMethod3 -N "" -q
 
-cat <<EOF > /home/mjmarquespais/script.sh
+cat <<EOF > ~/script.sh
 #!/bin/bash
 sudo chown ceph. /etc/ceph/ceph.*
 
@@ -169,7 +169,7 @@ sudo mkfs.xfs /dev/rbd0
 sudo mount /dev/rbd0 /mnt
 EOF
 
-sudo chmod +x /home/mjmarquespais/script.sh
+sudo chmod +x ~/script.sh
 
 
 # To switch to the postgres account on your server, execute the following command:
@@ -199,7 +199,8 @@ sudo chmod +x /home/mjmarquespais/script.sh
 #\q
 
 
-cat <<EOF > /home/mjmarquespais/scriptpgAdmin.sh
+
+cat <<EOF > ~/scriptpgAdmin.sh
 #!/bin/bash
 # pgAdmin repository
 sudo curl https://www.pgadmin.org/static/packages_pgadmin_org.pub | sudo apt-key add
@@ -216,7 +217,59 @@ sudo apt update
 sudo apt install pgadmin4 -y
 EOF
 
-sudo chmod +x /home/mjmarquespais/scriptpgAdmin.sh
+sudo chmod +x ~/scriptpgAdmin.sh
+
+
+
+# BACKUP
+
+sudo mkdir -p backup/MON/cephconf
+sudo mkdir -p backup/MON/cephvar
+sudo mkdir -p backup/MGR/cephconf
+sudo mkdir -p backup/MGR/cephvar
+sudo mkdir -p backup/OSD1/cephconf
+sudo mkdir -p backup/OSD1/cephvar
+sudo mkdir -p backup/OSD2/cephconf
+sudo mkdir -p backup/OSD2/cephvar
+
+cat <<EOF > ~/scriptBUPmon.sh
+#!/bin/bash
+# sudo rsync -av --delete --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod3" publicMethod3@10.204.0.12:/etc/ceph ~/backup/MON/cephconf
+sudo rsync -av --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod3" publicMethod3@10.204.0.12:/etc/ceph/ ~/backup/MON/cephconf
+
+sudo rsync -av --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod3" publicMethod3@10.204.0.12:/var/lib/ceph/ ~/backup/MON/cephvar
+EOF
+
+cat <<EOF > ~/scriptBUPmgr.sh
+#!/bin/bash
+
+sudo rsync -av --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod3" publicMethod3@10.204.0.13:/etc/ceph/ ~/backup/MGR/cephconf
+
+sudo rsync -av --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod3" publicMethod3@10.204.0.13:/var/lib/ceph/ ~/backup/MGR/cephvar
+EOF
+
+cat <<EOF > ~/scriptBUPosd1.sh
+#!/bin/bash
+
+sudo rsync -av --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod3" publicMethod3@10.204.0.10:/etc/ceph/ ~/backup/OSD1/cephconf
+
+sudo rsync -av --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod3" publicMethod3@10.204.0.10:/var/lib/ceph/ ~/backup/OSD1/cephvar
+EOF
+
+cat <<EOF > ~/scriptBUPosd2.sh
+#!/bin/bash
+
+sudo rsync -av --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod3" publicMethod3@10.204.0.11:/etc/ceph/ ~/backup/OSD2/cephconf
+
+sudo rsync -av --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod3" publicMethod3@10.204.0.11:/var/lib/ceph/ ~/backup/OSD2/cephvar
+EOF
+
+sudo chmod +x ~/scriptBUPmon.sh
+sudo chmod +x ~/scriptBUPmgr.sh
+sudo chmod +x ~/scriptBUPosd1.sh
+sudo chmod +x ~/scriptBUPosd2.sh
+
+sudo chmod -R +rx ~/backup
 
 # Configure Web Server for pgAdmin4
 
@@ -224,17 +277,15 @@ sudo chmod +x /home/mjmarquespais/scriptpgAdmin.sh
 # email: mjmarquespais@gmail.com
 # password: 1234567890
 
-# mover  pasta do postgreSQL para /dev/rbd0
-# sudo mv /var/lib/postgresql/ /dev/rbd0/
+# mover  pasta do postgreSQL para pasta que dei mount
+# sudo mv /var/lib/postgresql/ /mnt
 
-# sincronizar os ficheiros dentro da maquina backup
-# rsync -a dir3/ dir2
 ```
 
 
 ## RBD Client Setup
 
-The script used for the RBD Client Setup was the `scriptRDB.sh` with the following code:
+The script used for the RBD Client Setup was the `scriptBackup.sh`, the same use for backup because this to components are together in one VM with the following code:
 
 ```bash
 #!/bin/bash
@@ -253,12 +304,13 @@ sudo systemctl start postgresql.service
 
 # https://www.devart.com/dbforge/postgresql/how-to-install-postgresql-on-linux/
 # https://www.server-world.info/en/note?os=Debian_11&p=ceph14&f=3
+# https://www.digitalocean.com/community/tutorials/how-to-use-rsync-to-sync-local-and-remote-directories-pt
+# https://www.rosehosting.com/blog/install-pgadmin-4-on-debian-10/
+# https://computingforgeeks.com/how-to-install-pgadmin4-on-debian/ 
 
-ssh-keygen -C publicMethod3 -f /home/mjmarquespais/.ssh/publicMethod3 -N "" -q
+ssh-keygen -C publicMethod3 -f ~/.ssh/publicMethod3 -N "" -q
 
-
-
-cat <<EOF > /home/mjmarquespais/script.sh
+cat <<EOF > ~/script.sh
 #!/bin/bash
 sudo chown ceph. /etc/ceph/ceph.*
 
@@ -294,7 +346,7 @@ sudo mkfs.xfs /dev/rbd0
 sudo mount /dev/rbd0 /mnt
 EOF
 
-sudo chmod +x /home/mjmarquespais/script.sh
+sudo chmod +x ~/script.sh
 
 
 # To switch to the postgres account on your server, execute the following command:
@@ -307,16 +359,105 @@ sudo chmod +x /home/mjmarquespais/script.sh
 
 # This will log you into the PostgreSQL prompt where you can interact with the database management system.
 
-# To view the PostgreSQL server version running, use the command:
 
-# psql -V
+
+# create a user and database with the following command:
+
+# CREATE USER pguser WITH PASSWORD 'password';
+# CREATE DATABASE pgdb;
+
+# grant all the privileges to PostgreSQL database with the following command:
+
+# GRANT ALL PRIVILEGES ON DATABASE pgdb to pguser;
+
 
 # To exit the PostgreSQL prompt, type:
 
 #\q
 
-# mover  pasta do postgreSQL para /dev/rbd0
-# sudo mv /var/lib/postgresql/ /dev/rbd0/
+
+
+cat <<EOF > ~/scriptpgAdmin.sh
+#!/bin/bash
+# pgAdmin repository
+sudo curl https://www.pgadmin.org/static/packages_pgadmin_org.pub | sudo apt-key add
+
+#Then create the repository configuration file
+sudo sh -c 'echo "deb https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/$(lsb_release -cs) pgadmin4 main" > /etc/apt/sources.list.d/pgadmin4.list'
+sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+
+# Import the Repository Signing Key
+wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo gpg --dearmor -o /usr/share/keyrings/postgresql-archive-keyring.gpg
+
+
+sudo apt update
+sudo apt install pgadmin4 -y
+EOF
+
+sudo chmod +x ~/scriptpgAdmin.sh
+
+
+
+# BACKUP
+
+sudo mkdir -p backup/MON/cephconf
+sudo mkdir -p backup/MON/cephvar
+sudo mkdir -p backup/MGR/cephconf
+sudo mkdir -p backup/MGR/cephvar
+sudo mkdir -p backup/OSD1/cephconf
+sudo mkdir -p backup/OSD1/cephvar
+sudo mkdir -p backup/OSD2/cephconf
+sudo mkdir -p backup/OSD2/cephvar
+
+cat <<EOF > ~/scriptBUPmon.sh
+#!/bin/bash
+# sudo rsync -av --delete --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod3" publicMethod3@10.204.0.12:/etc/ceph ~/backup/MON/cephconf
+sudo rsync -av --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod3" publicMethod3@10.204.0.12:/etc/ceph/ ~/backup/MON/cephconf
+
+sudo rsync -av --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod3" publicMethod3@10.204.0.12:/var/lib/ceph/ ~/backup/MON/cephvar
+EOF
+
+cat <<EOF > ~/scriptBUPmgr.sh
+#!/bin/bash
+
+sudo rsync -av --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod3" publicMethod3@10.204.0.13:/etc/ceph/ ~/backup/MGR/cephconf
+
+sudo rsync -av --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod3" publicMethod3@10.204.0.13:/var/lib/ceph/ ~/backup/MGR/cephvar
+EOF
+
+cat <<EOF > ~/scriptBUPosd1.sh
+#!/bin/bash
+
+sudo rsync -av --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod3" publicMethod3@10.204.0.10:/etc/ceph/ ~/backup/OSD1/cephconf
+
+sudo rsync -av --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod3" publicMethod3@10.204.0.10:/var/lib/ceph/ ~/backup/OSD1/cephvar
+EOF
+
+cat <<EOF > ~/scriptBUPosd2.sh
+#!/bin/bash
+
+sudo rsync -av --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod3" publicMethod3@10.204.0.11:/etc/ceph/ ~/backup/OSD2/cephconf
+
+sudo rsync -av --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod3" publicMethod3@10.204.0.11:/var/lib/ceph/ ~/backup/OSD2/cephvar
+EOF
+
+sudo chmod +x ~/scriptBUPmon.sh
+sudo chmod +x ~/scriptBUPmgr.sh
+sudo chmod +x ~/scriptBUPosd1.sh
+sudo chmod +x ~/scriptBUPosd2.sh
+
+sudo chmod -R +rx ~/backup
+
+# Configure Web Server for pgAdmin4
+
+# sudo /usr/pgadmin4/bin/setup-web.sh
+# email: mjmarquespais@gmail.com
+# password: 1234567890
+
+# mover  pasta do postgreSQL para pasta que dei mount
+# sudo mv /var/lib/postgresql/ /mnt
+
+
 ```
 
 ## Troubleshooting Steps
