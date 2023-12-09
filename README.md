@@ -1,9 +1,9 @@
 # Project System Administration 23/24 - Ceph Cluster Using Virtual Machines and Terraform with Backup Strategy
-This is the project for the System Administration class to design, deploy, and manage a Ceph cluster using virtual machines (VMs) and optionally, Terraform. 
+This is the project for the System Administration class to design, deploy, and manage a Ceph cluster using virtual machines (VMs) and, where feasible, Terraform. 
 
 ## Introduction
 
-This project involves the design, deployment, and management of a Ceph cluster on Google Cloud Platform (GCP). The Ceph cluster consists of Object Storage Devices (OSDs), Monitor Nodes (MONs), Manager Nodes (MGRs), an RBD client, and a backup solution implemented using rsync.
+This project involves the design, deployment, and management of a Ceph cluster on Google Cloud Platform (GCP). Our Ceph cluster consists of Object Storage Devices (OSDs), Monitor Nodes (MONs), Manager Nodes (MGRs), an RBD client, and a backup solution implemented using rsync.
 
 ## Project Overview
 
@@ -24,7 +24,7 @@ The architecture of this project includes:
 ### Project Tasks
 
 1. [x] **Infrastructure Setup**:
-   - Provision VM instances using Terraform (optional but recommended).
+   - Provision VM instances using Terraform.
 
 2. [x] **Ceph Software Installation**:
    - Install and configure Ceph software on the provisioned VMs.
@@ -55,11 +55,30 @@ The architecture of this project includes:
 
 To use the Terraform configurations:
 1. Ensure you have Terraform installed on your local machine.
-2. Clone or download this repository.
-3. Navigate to the directory containing the `main.tf` file.
-4. Run `terraform init` to initialize the configuration.
-5. Run `terraform plan` to preview the changes that Terraform will make to your infrastructure.
-6. Run `terraform apply` to create the VM instances as defined in the configuration file.
+
+   #### For linux (using apt)
+  
+    ```
+    sudo apt-get update
+    sudo apt-get install -y terraform
+    ```
+  
+    #### For macOS (using Homebrew):
+    
+    ```
+    brew install terraform
+    ```
+
+
+3. Clone or download this repository.
+4. Navigate to the directory containing the `main.tf` file.
+5. Run `terraform init` to initialize the configuration.
+6. Run `terraform validate` to check the syntax and validity of the configuration.
+7. Run `terraform plan` to preview the changes that Terraform will make to your infrastructure.
+8. Run `terraform apply` to create the VM instances as defined in the configuration file.
+   - For better efficiency and to avoid manual confirmation, you can add the `--auto-approve` flag:
+
+**Note:** If you make changes to your Terraform files, just rerun the final three steps. The initial `terraform init` is only necessary during the initial setup or when transitioning to a different Terraform configuration."
 
 ## Backup Strategies
 
