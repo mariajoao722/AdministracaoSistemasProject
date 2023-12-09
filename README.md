@@ -76,7 +76,7 @@ To use the Terraform configurations:
 6. Run `terraform validate` to check the syntax and validity of the configuration.
 7. Run `terraform plan` to preview the changes that Terraform will make to your infrastructure.
 8. Run `terraform apply` to create the VM instances as defined in the configuration file.
-   - For better efficiency and to avoid manual confirmation, you can add the `--auto-approve` flag:
+   - For better efficiency and to avoid manual confirmation, you can add the `--auto-approve` flag.
 
 **Note:** If you make changes to your Terraform files, just rerun the final three steps. The initial `terraform init` is only necessary during the initial setup or when transitioning to a different Terraform configuration."
 
