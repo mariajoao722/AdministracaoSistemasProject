@@ -45,7 +45,7 @@ The architecture of this project includes:
    - Perform backup and recovery tests to validate effectiveness.
 
 7. [x] **Monitoring and Evaluation**:
-   - Monitor health and performance of the Ceph cluster, backup system, and RBD client.
+   - Monitor the health and performance of the Ceph cluster, backup system, and RBD client.
 
 8. [x] **Documentation and Presentation**:
    - Document configurations, backup strategies, RBD client setup, and troubleshooting steps.
@@ -58,11 +58,12 @@ To use the Terraform configurations:
 2. Clone or download this repository.
 3. Navigate to the directory containing the `main.tf` file.
 4. Run `terraform init` to initialize the configuration.
-5. Run `terraform apply` to create the VM instances as defined in the configuration file.
+5. Run `terraform plan` to preview the changes that Terraform will make to your infrastructure.
+6. Run `terraform apply` to create the VM instances as defined in the configuration file.
 
 ## Backup Strategies
 
-The VM created to be serving as the backup server solution was created using Terraform with the following code:
+The VM created to serve as the backup server solution was created using Terraform with the following code:
 
 ```terraform
 resource "google_compute_instance" "backup" {
@@ -88,7 +89,7 @@ resource "google_compute_instance" "backup" {
   metadata_startup_script = file("scripts/scriptBackup.sh")
 }
 ```
-The script used to the backup strategies was the `scriptBackup.sh` with the following code:
+The script used for the backup strategies was the `scriptBackup.sh` with the following code:
 
 ```bash
 #!/bin/bash
