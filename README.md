@@ -219,6 +219,11 @@ EOF
 
 sudo chmod +x /home/mjmarquespais/scriptpgAdmin.sh
 
+# Configure Web Server for pgAdmin4
+
+# sudo /usr/pgadmin4/bin/setup-web.sh
+# email: mjmarquespais@gmail.com
+# password: 1234567890
 
 
 # BACKUP
@@ -270,12 +275,6 @@ sudo chmod +x /home/mjmarquespais/scriptBUPosd1.sh
 sudo chmod +x /home/mjmarquespais/scriptBUPosd2.sh
 
 sudo chmod -R +rx /home/mjmarquespais/backup
-
-# Configure Web Server for pgAdmin4
-
-# sudo /usr/pgadmin4/bin/setup-web.sh
-# email: mjmarquespais@gmail.com
-# password: 1234567890
 
 # mover  pasta do postgreSQL para pasta que dei mount
 # sudo mv /var/lib/postgresql/ /mnt
@@ -396,6 +395,11 @@ EOF
 
 sudo chmod +x /home/mjmarquespais/scriptpgAdmin.sh
 
+# Configure Web Server for pgAdmin4
+
+# sudo /usr/pgadmin4/bin/setup-web.sh
+# email: mjmarquespais@gmail.com
+# password: 1234567890
 
 
 # BACKUP
@@ -447,12 +451,6 @@ sudo chmod +x /home/mjmarquespais/scriptBUPosd1.sh
 sudo chmod +x /home/mjmarquespais/scriptBUPosd2.sh
 
 sudo chmod -R +rx /home/mjmarquespais/backup
-
-# Configure Web Server for pgAdmin4
-
-# sudo /usr/pgadmin4/bin/setup-web.sh
-# email: mjmarquespais@gmail.com
-# password: 1234567890
 
 # mover  pasta do postgreSQL para pasta que dei mount
 # sudo mv /var/lib/postgresql/ /mnt
