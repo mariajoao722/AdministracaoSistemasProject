@@ -1,11 +1,18 @@
 #!/bin/bash
-sudo apt-get update
-sudo apt-get install -y ceph
-sudo apt-get -y install ceph-commo
+sudo apt-get -y install ceph-common
+sudo apt-get install -y ceph-osd
 sudo apt-get install xfsprogs -y
 sudo apt-get install rsync
 
-#https://www.devart.com/dbforge/postgresql/how-to-install-postgresql-on-linux/
+#Next, install both the PostgreSQL package and the contrib packages
+
+sudo apt install postgresql postgresql-contrib -y
+
+#To verify that the PostgreSQL server is running, run the following command:
+
+sudo systemctl start postgresql.service
+
+# https://www.devart.com/dbforge/postgresql/how-to-install-postgresql-on-linux/
 # https://www.server-world.info/en/note?os=Debian_11&p=ceph14&f=3
 
 ssh-keygen -C publicMethod3 -f ~/.ssh/publicMethod3 -N "" -q
@@ -51,15 +58,6 @@ EOF
 sudo chmod +x ~/script.sh
 
 
-
-#Next, install both the PostgreSQL package and the contrib packages
-
-sudo apt install postgresql postgresql-contrib -y
-
-#To verify that the PostgreSQL server is running, run the following command:
-
-sudo systemctl start postgresql.service
-
 # To switch to the postgres account on your server, execute the following command:
 
 # sudo -i -u postgres
@@ -77,3 +75,6 @@ sudo systemctl start postgresql.service
 # To exit the PostgreSQL prompt, type:
 
 #\q
+
+# mover  pasta do postgreSQL para /dev/rbd0
+# sudo mv /var/lib/postgresql/ /dev/rbd0/

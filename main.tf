@@ -158,27 +158,3 @@ resource "google_compute_instance" "backup" {
 
   metadata_startup_script = file("scripts/scriptBackup.sh")
 }
-
-resource "google_compute_instance" "rdb" { # cliente
-  name         = var.instance_name6
-  machine_type = "e2-micro"
-  zone         = "europe-southwest1-c"
-
-  boot_disk {
-    initialize_params {
-      image = "debian-cloud/debian-11"
-    }
-  }
-
-
-  network_interface {
-    network = "default"
-    # Add access_config with a static external IP address
-    access_config {
-    }
-    # Assign a static internal IP address
-    network_ip = "10.204.0.15"
-  }
-  metadata_startup_script = file("scripts/scriptRDB.sh")
-
-}
