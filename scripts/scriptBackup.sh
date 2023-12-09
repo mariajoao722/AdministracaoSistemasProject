@@ -117,9 +117,7 @@ sudo mkdir -p backup/MGR/cephvar
 sudo mkdir -p backup/OSD1/cephconf
 sudo mkdir -p backup/OSD1/cephvar
 sudo mkdir -p backup/OSD2/cephconf
-sudo mkdir -p backup/OSD2/cephvar
-
-cat <<EOF > ~/scriptBUPmon.sh
+sudo mkdir -p backup/OSD2/cephvacat <<EOF > ~/scriptBUPmon.sh
 #!/bin/bash
 # sudo rsync -av --delete --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod3" publicMethod3@10.204.0.12:/etc/ceph ~/backup/MON/cephconf
 sudo rsync -av --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod3" publicMethod3@10.204.0.12:/etc/ceph/ ~/backup/MON/cephconf
