@@ -2,6 +2,7 @@
 sudo apt-get update
 sudo apt-get install -y ceph
 sudo apt-get install rsync
+sudo apt-get install firewalld -y
 
 # https://www.youtube.com/watch?v=HDEUdfS-S40
 # https://docs.ceph.com/en/latest/install/manual-deployment/
@@ -185,4 +186,3 @@ sudo chmod +x ~/script.sh
 sudo chmod +x ~/scriptrdb.sh
 sudo chmod +x ~/scriptmgr.sh
 sudo chmod +x ~/scriptBUPmon.sh
-

@@ -58,7 +58,6 @@ resource "google_sql_user" "myuser" {
 }
 */
 
-
 # create VM's
 
 resource "google_compute_instance" "osd1" {
