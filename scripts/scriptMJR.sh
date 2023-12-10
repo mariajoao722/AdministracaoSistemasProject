@@ -24,9 +24,9 @@ sudo chown -R ceph. /var/lib/ceph/mgr/ceph-mon
 sudo systemctl enable --now ceph-mgr@mon
 EOF
 
-sudo chmod +x /mjmarquespais/script.sh
+sudo chmod +x ~/script.sh
 
-cat <<EOF > mjmarquespais/scriptBUPmgr.sh
+cat <<EOF > ~/scriptBUPmgr.sh
 #!/bin/bash
 
 sudo rsync -av --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod4" publicMethod4@10.204.0.14:~/backup/MGR/cephconf/ /etc/ceph
