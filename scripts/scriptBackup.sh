@@ -3,12 +3,9 @@ sudo apt-get -y install ceph-common
 sudo apt-get install -y ceph-osd
 sudo apt-get install xfsprogs -y
 sudo apt-get install rsync
-
-#Next, install both the PostgreSQL package and the contrib packages
-
 sudo apt install postgresql postgresql-contrib -y
 
-#To verify that the PostgreSQL server is running, run the following command:
+# verify that the PostgreSQL server is running
 
 sudo systemctl start postgresql.service
 
@@ -106,7 +103,14 @@ EOF
 
 sudo chmod +x ~/scriptpgAdmin.sh
 
+# Configure Web Server for pgAdmin4
 
+# sudo /usr/pgadmin4/bin/setup-web.sh
+# email: mjmarquespais@gmail.com
+# password: 1234567890
+
+# mover  pasta do postgreSQL para pasta que dei mount
+# sudo mv /var/lib/postgresql/ /mnt
 
 # BACKUP
 
@@ -117,7 +121,9 @@ sudo mkdir -p backup/MGR/cephvar
 sudo mkdir -p backup/OSD1/cephconf
 sudo mkdir -p backup/OSD1/cephvar
 sudo mkdir -p backup/OSD2/cephconf
-sudo mkdir -p backup/OSD2/cephvacat <<EOF > ~/scriptBUPmon.sh
+sudo mkdir -p backup/OSD2/cephvacat 
+
+cat <<EOF > ~/scriptBUPmon.sh
 #!/bin/bash
 # sudo rsync -av --delete --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod3" publicMethod3@10.204.0.12:/etc/ceph ~/backup/MON/cephconf
 sudo rsync -av --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod3" publicMethod3@10.204.0.12:/etc/ceph/ ~/backup/MON/cephconf
@@ -156,12 +162,5 @@ sudo chmod +x ~/scriptBUPosd2.sh
 
 sudo chmod -R +rx ~/backup
 
-# Configure Web Server for pgAdmin4
 
-# sudo /usr/pgadmin4/bin/setup-web.sh
-# email: mjmarquespais@gmail.com
-# password: 1234567890
-
-# mover  pasta do postgreSQL para pasta que dei mount
-# sudo mv /var/lib/postgresql/ /mnt
 

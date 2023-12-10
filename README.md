@@ -80,6 +80,26 @@ To use the Terraform configurations:
 
 **Note:** If you make changes to your Terraform files, just rerun the final three steps. The initial `terraform init` is only necessary during the initial setup or when transitioning to a different Terraform configuration."
 
+To destroy the resources created by Terraform during the provisioning process use `terraform destroy`. 
+
+To have a connection between all VMs using SSH, after the installation is complete we have to copy the public key to Metadata in GCP. After doing this we can continue with the configurations of the cluster.
+
+For all the VMs after the installation of packages is complete we have the scripts that are created.
+For MON VM:
+- run ``` ./scriptosd1.sh```, ``` ./scriptosd2.sh```, ``` ./script.sh```, ``` ./scriptrdb.sh```, ``` ./scriptmgr.sh```.
+
+For OSD1 VM:
+- after running the script  ``` ./scriptosd1.sh``` in MON VM we have to run  ``` ./script.sh```.
+
+For OSD2 VM:
+- after running the script  ``` ./scriptosd2.sh``` in MON VM we have to run  ``` ./script.sh```.
+
+For MGR VM:
+- after running the script  ``` ./scriptmgr.sh``` in MON VM we have to run  ``` ./script.sh```.
+
+For RDB/Backup VM:
+- after running the script  ``` ./scriptrdb.sh``` in MON VM we have to run  ``` ./script.sh```.
+
 ## Backup Strategies
 
 The VM created to serve as the backup server solution was created using Terraform with the following code:
@@ -225,6 +245,9 @@ sudo chmod +x ~/scriptpgAdmin.sh
 # email: mjmarquespais@gmail.com
 # password: 1234567890
 
+# mover  pasta do postgreSQL para pasta que dei mount
+# sudo mv /var/lib/postgresql/ /mnt
+
 
 # BACKUP
 
@@ -276,15 +299,31 @@ sudo chmod +x ~/scriptBUPosd2.sh
 
 sudo chmod -R +rx ~/backup
 
-# mover  pasta do postgreSQL para pasta que dei mount
-# sudo mv /var/lib/postgresql/ /mnt
-
 ```
 
+To do the backup of the cluster we have to run the following commands:
+- for MON vm
+```
+./scriptBUPmon.sh
+```
+- for OSD1 vm
+```
+./scriptBUPosd1.sh
+```
+- for OSD2 vm
+```
+./scriptBUPosd2.sh
+```
+- for MGR vm
+```
+./scriptBUPmgr.sh
+```
+
+If we wanna recover the data from another VM, all we have to do is go the vm we want to fetch the backup and run the command ```./scriptBUP<NAME-OF-CLUSTER>.sh```
 
 ## RBD Client Setup
 
-The script used for the RBD Client Setup was the `scriptBackup.sh`, the same use for backup because this to components are together in one VM with the following code:
+The script used for the RBD Client Setup was the `scriptBackup.sh`, the same one used for backup because these two components are together in one VM with the following code:
 
 ```bash
 #!/bin/bash
@@ -358,8 +397,6 @@ sudo chmod +x ~/script.sh
 
 # This will log you into the PostgreSQL prompt where you can interact with the database management system.
 
-
-
 # create a user and database with the following command:
 
 # CREATE USER pguser WITH PASSWORD 'password';
@@ -400,6 +437,9 @@ sudo chmod +x ~/scriptpgAdmin.sh
 # sudo /usr/pgadmin4/bin/setup-web.sh
 # email: mjmarquespais@gmail.com
 # password: 1234567890
+
+# mover  pasta do postgreSQL para pasta que dei mount
+# sudo mv /var/lib/postgresql/ /mnt
 
 
 # BACKUP
@@ -452,11 +492,22 @@ sudo chmod +x ~/scriptBUPosd2.sh
 
 sudo chmod -R +rx ~/backup
 
-# mover  pasta do postgreSQL para pasta que dei mount
-# sudo mv /var/lib/postgresql/ /mnt
-
-
 ```
+
+After running the script for RDB in the MON VM we have to run the `script.sh` to configure the RDB client.
+
+To create a database using PostgreSQL we have to run the following commands:
+- ``` sudo -i -u postgres ```, now we are inside the Postgres account in my server;
+- to enter the prompt use ```psql ``` ;
+- create a user and database ``` CREATE USER pguser WITH PASSWORD 'password';
+CREATE DATABASE pgdb; ``` ;
+- grant all the privileges to the PostgreSQL database ``` GRANT ALL PRIVILEGES ON DATABASE pgdb to pguser; ``` 
+- exit the PostgreSQL ```\q```.
+
+To install pgAdmin4 we have to run the script `scriptpgAdmin.sh `.
+To have connection to the database outside de vm we have the configure the web server:
+- ```sudo /usr/pgadmin4/bin/setup-web.sh```;
+- Then we have to enter our email and password information.
 
 ## Troubleshooting Steps
 

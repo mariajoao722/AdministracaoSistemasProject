@@ -27,7 +27,7 @@ resource "google_compute_disk" "default2" {
 resource "google_sql_database_instance" "postgresql-terraform" {
   name             = "postgresql-terraform"
   region           = "europe-southwest1"
-  database_version = "POSTGRES_10"
+  database_version = "POSTGRES_14"
   settings {
     tier = "db-f1-micro"
   }
