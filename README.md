@@ -225,6 +225,9 @@ sudo chmod +x ~/scriptpgAdmin.sh
 # email: mjmarquespais@gmail.com
 # password: 1234567890
 
+# mover  pasta do postgreSQL para pasta que dei mount
+# sudo mv /var/lib/postgresql/ /mnt
+
 
 # BACKUP
 
@@ -276,15 +279,31 @@ sudo chmod +x ~/scriptBUPosd2.sh
 
 sudo chmod -R +rx ~/backup
 
-# mover  pasta do postgreSQL para pasta que dei mount
-# sudo mv /var/lib/postgresql/ /mnt
-
 ```
 
+To do the backup of the cluster we have to run the following commands:
+- for MON vm
+```
+./scriptBUPmon.sh
+```
+- for OSD1 vm
+```
+./scriptBUPosd1.sh
+```
+- for OSD2 vm
+```
+./scriptBUPosd2.sh
+```
+- for MGR vm
+```
+./scriptBUPmgr.sh
+```
+
+If we wanna recover the data from another VM, all we have to do is go the vm we want to fetch the backup and run the command ```./scriptBUP<NAME-OF-CLUSTER>.sh```
 
 ## RBD Client Setup
 
-The script used for the RBD Client Setup was the `scriptBackup.sh`, the same use for backup because this to components are together in one VM with the following code:
+The script used for the RBD Client Setup was the `scriptBackup.sh`, the same one used for backup because these two components are together in one VM with the following code:
 
 ```bash
 #!/bin/bash
@@ -358,8 +377,6 @@ sudo chmod +x ~/script.sh
 
 # This will log you into the PostgreSQL prompt where you can interact with the database management system.
 
-
-
 # create a user and database with the following command:
 
 # CREATE USER pguser WITH PASSWORD 'password';
@@ -400,6 +417,9 @@ sudo chmod +x ~/scriptpgAdmin.sh
 # sudo /usr/pgadmin4/bin/setup-web.sh
 # email: mjmarquespais@gmail.com
 # password: 1234567890
+
+# mover  pasta do postgreSQL para pasta que dei mount
+# sudo mv /var/lib/postgresql/ /mnt
 
 
 # BACKUP
@@ -452,11 +472,22 @@ sudo chmod +x ~/scriptBUPosd2.sh
 
 sudo chmod -R +rx ~/backup
 
-# mover  pasta do postgreSQL para pasta que dei mount
-# sudo mv /var/lib/postgresql/ /mnt
-
-
 ```
+
+After running the script for RDB in the MON VM we have to run the `script.sh` to configure the RDB client.
+
+To create a database using PostgreSQL we have to run the following commands:
+- ``` sudo -i -u postgres ```, now we are inside the Postgres account in my server;
+- to enter the prompt use ```psql ``` ;
+- create a user and database ``` CREATE USER pguser WITH PASSWORD 'password';
+CREATE DATABASE pgdb; ``` ;
+- grant all the privileges to the PostgreSQL database ``` GRANT ALL PRIVILEGES ON DATABASE pgdb to pguser; ``` 
+- exit the PostgreSQL ```\q```.
+
+To install pgAdmin4 we have to run the script `scriptpgAdmin.sh `.
+To have connection to the database outside de vm we have the configure the web server:
+- ```sudo /usr/pgadmin4/bin/setup-web.sh```;
+- Then we have to enter our email and password information.
 
 ## Troubleshooting Steps
 
