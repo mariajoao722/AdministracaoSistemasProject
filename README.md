@@ -511,37 +511,28 @@ To have connection to the database outside de vm we have the configure the web s
 
 ## Troubleshooting Steps
 
-### 1. Network Configuration Problems
-
-- **Issue**: Failure in the communication between OSDs, MONs, or MGRs.
-- **Troubleshooting Steps**:
-  - Check network configurations and ensure proper connectivity.
-  - Check DNS configurations for accurate name resolution.
-  - Review routing tables and network interfaces.
-
-### 2. OSD Failures
+### 1. OSD Failures
 
 - **Issue**: OSDs failing to join the cluster.
 - **Troubleshooting Steps**:
   - Validate OSD configurations and ensure they are properly initialized.
-  - Review Ceph logs for specific OSD initialization errors.
   - Verify OSD authentication and permissions.
 
-### 3. MON or MGR Failures
+### 2. MON or MGR Failures
 
 - **Issue**: MON or MGR nodes experiencing issues or going offline.
 - **Troubleshooting Steps**:
   - Review MON/MGR logs for any errors or warnings.
   - Restart MON/MGR services if necessary.
+  - Check if the configuration files are correct.
 
-### 4. RBD Client Connectivity Problems
+### 3. RBD Client Connectivity Problems
 
-- **Issue**: RBD client unable to access or store data on the Ceph cluster.
+- **Issue**: RBD client is unable to access or store data on the Ceph cluster.
 - **Troubleshooting Steps**:
-  - Validate RBD configuration, authentication keys and permissions.
-  - Check network connectivity between the client and Ceph cluster.
+  - Validate RBD configuration, authentication keys, and permissions.
 
-### 5. Backup and Recovery Problems
+### 4. Backup and Recovery Problems
 
 - **Issue**: Backup failures to recover data.
 - **Troubleshooting Steps**:
