@@ -23,6 +23,7 @@ resource "google_compute_disk" "default2" {
   size = "10"
 }
 
+/*
 # For postgresql
 resource "google_sql_database_instance" "postgresql-terraform" {
   name             = "postgresql-terraform"
@@ -30,6 +31,15 @@ resource "google_sql_database_instance" "postgresql-terraform" {
   database_version = "POSTGRES_14"
   settings {
     tier = "db-f1-micro"
+
+    ip_configuration {
+      ipv4_enabled = true
+
+      authorized_networks {
+        name  = "my-network"
+        value = "10.204.0.20/32"
+      }
+    }
   }
   # so we can do terrafrom destroy
   deletion_protection  = "false"
@@ -46,7 +56,7 @@ resource "google_sql_user" "myuser" {
   instance = google_sql_database_instance.postgresql-terraform.name
   password = "password"
 }
-
+*/
 
 
 # create VM's

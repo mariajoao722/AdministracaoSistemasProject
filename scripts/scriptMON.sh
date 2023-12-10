@@ -1,10 +1,15 @@
 #!/bin/bash
+sudo apt-get update
 sudo apt-get install -y ceph
 sudo apt-get install rsync
 
 # https://www.youtube.com/watch?v=HDEUdfS-S40
 # https://docs.ceph.com/en/latest/install/manual-deployment/
 # https://www.server-world.info/en/note?os=Debian_11&p=ceph14&f=1
+
+# mudar permissões para o backup
+sudo chmod -R +rx /etc/ceph/
+sudo chmod -R +rx /var/lib/ceph/
 
 outfile=~/debug.txt
 
@@ -16,7 +21,7 @@ uui=$(uuidgen)
 HOSTNAME=$(hostname)
 
 # Create or update ceph.conf
-cat <<EOF > /etc/ceph/ceph.conf
+sudo cat <<EOF > /etc/ceph/ceph.conf
 [global]
 # specify cluster network for monitoring
 cluster network = 10.204.0.0/24
@@ -68,13 +73,7 @@ sudo ceph-authtool /etc/ceph/ceph.mon.keyring --import-keyring /var/lib/ceph/boo
 FSID=$(grep "^fsid" /etc/ceph/ceph.conf | awk {'print $NF'})
 NODENAME=$(grep "^mon initial" /etc/ceph/ceph.conf | awk {'print $NF'})
 NODEIP=$(grep "^mon host" /etc/ceph/ceph.conf | awk {'print $NF'})
-monmaptool --create --add $NODENAME $NODEIP --fsid $FSID /etc/ceph/monmap
-
-<<<<<<< HEAD
-outfile=~/debug.txt
-=======
-
->>>>>>> a66f64aec70c93d5278f6192be176dc14876fd39
+sudo monmaptool --create --add $NODENAME $NODEIP --fsid $FSID /etc/ceph/monmap
 
 echo $HOSTNAME | tee -a $outfile  # mon
 echo $uui | tee -a $outfile
@@ -187,6 +186,3 @@ sudo chmod +x ~/scriptrdb.sh
 sudo chmod +x ~/scriptmgr.sh
 sudo chmod +x ~/scriptBUPmon.sh
 
-# mudar permissões para o backup
-sudo chmod -R +rx /etc/ceph/
-sudo chmod -R +rx /var/lib/ceph/

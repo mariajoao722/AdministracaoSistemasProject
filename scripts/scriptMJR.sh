@@ -1,4 +1,5 @@
 #!/bin/bash
+sudo apt-get update
 sudo apt-get install -y ceph
 sudo apt-get install rsync
 
@@ -15,7 +16,7 @@ sudo ceph auth get-or-create mgr.mon mon 'allow profile mgr' osd 'allow *' mds '
 
 sudo ceph auth get-or-create mgr.mon | sudo tee /etc/ceph/ceph.mgr.admin.keyring
 
-cat <<EOF > ~/script.s
+cat <<EOF > ~/script.sh
 #!/bin/bash
 sudo chown ceph. /etc/ceph/ceph.*
 sudo cp /etc/ceph/ceph.mgr.admin.keyring /var/lib/ceph/mgr/ceph-mon/keyring
