@@ -80,6 +80,24 @@ To use the Terraform configurations:
 
 **Note:** If you make changes to your Terraform files, just rerun the final three steps. The initial `terraform init` is only necessary during the initial setup or when transitioning to a different Terraform configuration."
 
+To have a connection between all VMs using SSH, after the installation is complete we have to copy the public key to Metadata in GCP. After doing this we can continue with the configurations of the cluster.
+
+For all the VMs after the installation of packages is complete we have the scripts that are created.
+For MON VM:
+- run ``` ./scriptosd1.sh```, ``` ./scriptosd2.sh```, ``` ./script.sh```, ``` ./scriptrdb.sh```, ``` ./scriptmgr.sh```.
+
+For OSD1 VM:
+- after running the script  ``` ./scriptosd1.sh``` in MON VM we have to run  ``` ./script.sh```.
+
+For OSD2 VM:
+- after running the script  ``` ./scriptosd2.sh``` in MON VM we have to run  ``` ./script.sh```.
+
+For MGR VM:
+- after running the script  ``` ./scriptmgr.sh``` in MON VM we have to run  ``` ./script.sh```.
+
+For RDB/Backup VM:
+- after running the script  ``` ./scriptrdb.sh``` in MON VM we have to run  ``` ./script.sh```.
+
 ## Backup Strategies
 
 The VM created to serve as the backup server solution was created using Terraform with the following code:
