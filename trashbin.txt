@@ -1,3 +1,20 @@
+  host     = "me.com"
+
+ 
+resource "google_sql_user" "users" {
+  name     = "me"
+  instance = google_sql_database_instance.main.name
+  host     = "me.com"
+  password = "changeme"
+}
+ 
+# See versions at https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance#database_version
+
+ 
+my
+ 
+terraform
+ 
 mjmarquespais
  
  /mjmarquespais
