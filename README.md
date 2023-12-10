@@ -80,6 +80,8 @@ To use the Terraform configurations:
 
 **Note:** If you make changes to your Terraform files, just rerun the final three steps. The initial `terraform init` is only necessary during the initial setup or when transitioning to a different Terraform configuration."
 
+To destroy the resources created by Terraform during the provisioning process use `terraform destroy`. 
+
 To have a connection between all VMs using SSH, after the installation is complete we have to copy the public key to Metadata in GCP. After doing this we can continue with the configurations of the cluster.
 
 For all the VMs after the installation of packages is complete we have the scripts that are created.
