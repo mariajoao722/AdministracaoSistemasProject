@@ -132,16 +132,14 @@ The script used for the backup strategies was the `scriptBackup.sh` with the fol
 
 ```bash
 #!/bin/bash
+sudo apt-get update
 sudo apt-get -y install ceph-common
 sudo apt-get install -y ceph-osd
 sudo apt-get install xfsprogs -y
 sudo apt-get install rsync
-
-#Next, install both the PostgreSQL package and the contrib packages
-
 sudo apt install postgresql postgresql-contrib -y
 
-#To verify that the PostgreSQL server is running, run the following command:
+# verify that the PostgreSQL server is running
 
 sudo systemctl start postgresql.service
 
@@ -248,7 +246,6 @@ sudo chmod +x ~/scriptpgAdmin.sh
 # mover  pasta do postgreSQL para pasta que dei mount
 # sudo mv /var/lib/postgresql/ /mnt
 
-
 # BACKUP
 
 sudo mkdir -p backup/MON/cephconf
@@ -258,7 +255,7 @@ sudo mkdir -p backup/MGR/cephvar
 sudo mkdir -p backup/OSD1/cephconf
 sudo mkdir -p backup/OSD1/cephvar
 sudo mkdir -p backup/OSD2/cephconf
-sudo mkdir -p backup/OSD2/cephvar
+sudo mkdir -p backup/OSD2/cephvacat 
 
 cat <<EOF > ~/scriptBUPmon.sh
 #!/bin/bash
@@ -298,7 +295,6 @@ sudo chmod +x ~/scriptBUPosd1.sh
 sudo chmod +x ~/scriptBUPosd2.sh
 
 sudo chmod -R +rx ~/backup
-
 ```
 
 To do the backup of the cluster we have to run the following commands:
@@ -327,16 +323,14 @@ The script used for the RBD Client Setup was the `scriptBackup.sh`, the same one
 
 ```bash
 #!/bin/bash
+sudo apt-get update
 sudo apt-get -y install ceph-common
 sudo apt-get install -y ceph-osd
 sudo apt-get install xfsprogs -y
 sudo apt-get install rsync
-
-#Next, install both the PostgreSQL package and the contrib packages
-
 sudo apt install postgresql postgresql-contrib -y
 
-#To verify that the PostgreSQL server is running, run the following command:
+# verify that the PostgreSQL server is running
 
 sudo systemctl start postgresql.service
 
@@ -397,6 +391,8 @@ sudo chmod +x ~/script.sh
 
 # This will log you into the PostgreSQL prompt where you can interact with the database management system.
 
+
+
 # create a user and database with the following command:
 
 # CREATE USER pguser WITH PASSWORD 'password';
@@ -441,7 +437,6 @@ sudo chmod +x ~/scriptpgAdmin.sh
 # mover  pasta do postgreSQL para pasta que dei mount
 # sudo mv /var/lib/postgresql/ /mnt
 
-
 # BACKUP
 
 sudo mkdir -p backup/MON/cephconf
@@ -451,7 +446,7 @@ sudo mkdir -p backup/MGR/cephvar
 sudo mkdir -p backup/OSD1/cephconf
 sudo mkdir -p backup/OSD1/cephvar
 sudo mkdir -p backup/OSD2/cephconf
-sudo mkdir -p backup/OSD2/cephvar
+sudo mkdir -p backup/OSD2/cephvacat 
 
 cat <<EOF > ~/scriptBUPmon.sh
 #!/bin/bash
@@ -491,7 +486,6 @@ sudo chmod +x ~/scriptBUPosd1.sh
 sudo chmod +x ~/scriptBUPosd2.sh
 
 sudo chmod -R +rx ~/backup
-
 ```
 
 After running the script for RDB in the MON VM we have to run the `script.sh` to configure the RDB client.
