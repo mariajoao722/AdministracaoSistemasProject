@@ -16,9 +16,9 @@ sudo systemctl start postgresql.service
 # https://www.rosehosting.com/blog/install-pgadmin-4-on-debian-10/
 # https://computingforgeeks.com/how-to-install-pgadmin4-on-debian/ 
 
-ssh-keygen -C publicMethod3 -f ~/.ssh/publicMethod3 -N "" -q
+ssh-keygen -C publicMethod3 -f home/mjmarquespais/.ssh/publicMethod3 -N "" -q
 
-cat <<EOF > ~/script.sh
+cat <<EOF > home/mjmarquespais/script.sh
 #!/bin/bash
 sudo chown ceph. /etc/ceph/ceph.*
 
@@ -54,7 +54,7 @@ sudo mkfs.xfs /dev/rbd0
 sudo mount /dev/rbd0 /mnt
 EOF
 
-sudo chmod +x ~/script.sh
+sudo chmod +x home/mjmarquespais/script.sh
 
 
 # To switch to the postgres account on your server, execute the following command:
@@ -85,7 +85,7 @@ sudo chmod +x ~/script.sh
 
 
 
-cat <<EOF > ~/scriptpgAdmin.sh
+cat <<EOF > home/mjmarquespais/scriptpgAdmin.sh
 #!/bin/bash
 # pgAdmin repository
 sudo curl https://www.pgadmin.org/static/packages_pgadmin_org.pub | sudo apt-key add
@@ -102,7 +102,7 @@ sudo apt update
 sudo apt install pgadmin4 -y
 EOF
 
-sudo chmod +x ~/scriptpgAdmin.sh
+sudo chmod +x home/mjmarquespais/scriptpgAdmin.sh
 
 # Configure Web Server for pgAdmin4
 
@@ -124,44 +124,44 @@ sudo mkdir -p backup/OSD1/cephvar
 sudo mkdir -p backup/OSD2/cephconf
 sudo mkdir -p backup/OSD2/cephvacat 
 
-cat <<EOF > ~/scriptBUPmon.sh
+cat <<EOF > home/mjmarquespais/scriptBUPmon.sh
 #!/bin/bash
-# sudo rsync -av --delete --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod3" publicMethod3@10.204.0.12:/etc/ceph ~/backup/MON/cephconf
-sudo rsync -av --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod3" publicMethod3@10.204.0.12:/etc/ceph/ ~/backup/MON/cephconf
+# sudo rsync -av --delete --exclude='.ceph' -e "ssh -i home/mjmarquespais/.ssh/publicMethod3" publicMethod3@10.204.0.12:/etc/ceph home/mjmarquespais/backup/MON/cephconf
+sudo rsync -av --exclude='.ceph' -e "ssh -i home/mjmarquespais/.ssh/publicMethod3" publicMethod3@10.204.0.12:/etc/ceph/ home/mjmarquespais/backup/MON/cephconf
 
-sudo rsync -av --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod3" publicMethod3@10.204.0.12:/var/lib/ceph/ ~/backup/MON/cephvar
+sudo rsync -av --exclude='.ceph' -e "ssh -i home/mjmarquespais/.ssh/publicMethod3" publicMethod3@10.204.0.12:/var/lib/ceph/ home/mjmarquespais/backup/MON/cephvar
 EOF
 
-cat <<EOF > ~/scriptBUPmgr.sh
+cat <<EOF > home/mjmarquespais/scriptBUPmgr.sh
 #!/bin/bash
 
-sudo rsync -av --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod3" publicMethod3@10.204.0.13:/etc/ceph/ ~/backup/MGR/cephconf
+sudo rsync -av --exclude='.ceph' -e "ssh -i home/mjmarquespais/.ssh/publicMethod3" publicMethod3@10.204.0.13:/etc/ceph/ home/mjmarquespais/backup/MGR/cephconf
 
-sudo rsync -av --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod3" publicMethod3@10.204.0.13:/var/lib/ceph/ ~/backup/MGR/cephvar
+sudo rsync -av --exclude='.ceph' -e "ssh -i home/mjmarquespais/.ssh/publicMethod3" publicMethod3@10.204.0.13:/var/lib/ceph/ home/mjmarquespais/backup/MGR/cephvar
 EOF
 
-cat <<EOF > ~/scriptBUPosd1.sh
+cat <<EOF > home/mjmarquespais/scriptBUPosd1.sh
 #!/bin/bash
 
-sudo rsync -av --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod3" publicMethod3@10.204.0.10:/etc/ceph/ ~/backup/OSD1/cephconf
+sudo rsync -av --exclude='.ceph' -e "ssh -i home/mjmarquespais/.ssh/publicMethod3" publicMethod3@10.204.0.10:/etc/ceph/ home/mjmarquespais/backup/OSD1/cephconf
 
-sudo rsync -av --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod3" publicMethod3@10.204.0.10:/var/lib/ceph/ ~/backup/OSD1/cephvar
+sudo rsync -av --exclude='.ceph' -e "ssh -i home/mjmarquespais/.ssh/publicMethod3" publicMethod3@10.204.0.10:/var/lib/ceph/ home/mjmarquespais/backup/OSD1/cephvar
 EOF
 
-cat <<EOF > ~/scriptBUPosd2.sh
+cat <<EOF > home/mjmarquespais/scriptBUPosd2.sh
 #!/bin/bash
 
-sudo rsync -av --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod3" publicMethod3@10.204.0.11:/etc/ceph/ ~/backup/OSD2/cephconf
+sudo rsync -av --exclude='.ceph' -e "ssh -i home/mjmarquespais/.ssh/publicMethod3" publicMethod3@10.204.0.11:/etc/ceph/ home/mjmarquespais/backup/OSD2/cephconf
 
-sudo rsync -av --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod3" publicMethod3@10.204.0.11:/var/lib/ceph/ ~/backup/OSD2/cephvar
+sudo rsync -av --exclude='.ceph' -e "ssh -i home/mjmarquespais/.ssh/publicMethod3" publicMethod3@10.204.0.11:/var/lib/ceph/ home/mjmarquespais/backup/OSD2/cephvar
 EOF
 
-sudo chmod +x ~/scriptBUPmon.sh
-sudo chmod +x ~/scriptBUPmgr.sh
-sudo chmod +x ~/scriptBUPosd1.sh
-sudo chmod +x ~/scriptBUPosd2.sh
+sudo chmod +x home/mjmarquespais/scriptBUPmon.sh
+sudo chmod +x home/mjmarquespais/scriptBUPmgr.sh
+sudo chmod +x home/mjmarquespais/scriptBUPosd1.sh
+sudo chmod +x home/mjmarquespais/scriptBUPosd2.sh
 
-sudo chmod -R +rx ~/backup
+sudo chmod -R +rx home/mjmarquespais/backup
 
 
 

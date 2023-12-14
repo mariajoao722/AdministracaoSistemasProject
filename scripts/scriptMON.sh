@@ -4,6 +4,8 @@ sudo apt-get install -y ceph
 sudo apt-get install rsync
 sudo apt-get install firewalld -y
 
+#sudo cat /var/log/syslog
+
 # https://www.youtube.com/watch?v=HDEUdfS-S40
 # https://docs.ceph.com/en/latest/install/manual-deployment/
 # https://www.server-world.info/en/note?os=Debian_11&p=ceph14&f=1
@@ -12,11 +14,11 @@ sudo apt-get install firewalld -y
 sudo chmod -R +rx /etc/ceph/
 sudo chmod -R +rx /var/lib/ceph/
 
-outfile=~/debug.txt
+outfile=home/mjmarquespais/debug.txt
 
 echo "feito" | tee -a $outfile
 
-ssh-keygen -C publicMethod -f ~/.ssh/publicMethod -N "" -q
+ssh-keygen -C publicMethod -f home/mjmarquespais/.ssh/publicMethod -N "" -q
 
 uui=$(uuidgen)
 HOSTNAME=$(hostname)
@@ -104,6 +106,7 @@ sudo firewall-cmd --zone=public --add-service=ceph-mon
 sudo firewall-cmd --zone=public --add-service=ceph-mon --permanent
 sudo firewall-cmd --reload
 
+echo "after1" | tee -a $outfile
 
 # create a directory for Manager Daemon
 # directory name ⇒ (Cluster Name)-(Node Name)
@@ -119,33 +122,33 @@ sudo chown -R ceph. /var/lib/ceph/mgr/ceph-mon
 sudo systemctl enable --now ceph-mgr@$NODENAME
 
 
-cat <<EOF > ~/scriptosd1.sh
+cat <<EOF > home/mjmarquespais/scriptosd1.sh
 #!/bin/bash
-sudo scp -i ~/.ssh/publicMethod /etc/ceph/ceph.conf publicMethod@10.204.0.10:/tmp/
-sudo ssh -i ~/.ssh/publicMethod publicMethod@10.204.0.10 "sudo mv /tmp/ceph.conf /etc/ceph/ceph.conf"
+sudo scp -i home/mjmarquespais/.ssh/publicMethod /etc/ceph/ceph.conf publicMethod@10.204.0.10:/tmp/
+sudo ssh -i home/mjmarquespais/.ssh/publicMethod publicMethod@10.204.0.10 "sudo mv /tmp/ceph.conf /etc/ceph/ceph.conf"
 
-sudo scp -i ~/.ssh/publicMethod /etc/ceph/ceph.client.admin.keyring publicMethod@10.204.0.10:/tmp/
-sudo ssh -i ~/.ssh/publicMethod publicMethod@10.204.0.10 "sudo mv /tmp/ceph.client.admin.keyring  /etc/ceph/ceph.client.admin.keyring"
+sudo scp -i home/mjmarquespais/.ssh/publicMethod /etc/ceph/ceph.client.admin.keyring publicMethod@10.204.0.10:/tmp/
+sudo ssh -i home/mjmarquespais/.ssh/publicMethod publicMethod@10.204.0.10 "sudo mv /tmp/ceph.client.admin.keyring  /etc/ceph/ceph.client.admin.keyring"
 
-sudo scp -i ~/.ssh/publicMethod /var/lib/ceph/bootstrap-osd/ceph.keyring publicMethod@10.204.0.10:/tmp/
-sudo ssh -i ~/.ssh/publicMethod publicMethod@10.204.0.10 "sudo mv /tmp/ceph.keyring /var/lib/ceph/bootstrap-osd/ceph.keyring"
+sudo scp -i home/mjmarquespais/.ssh/publicMethod /var/lib/ceph/bootstrap-osd/ceph.keyring publicMethod@10.204.0.10:/tmp/
+sudo ssh -i home/mjmarquespais/.ssh/publicMethod publicMethod@10.204.0.10 "sudo mv /tmp/ceph.keyring /var/lib/ceph/bootstrap-osd/ceph.keyring"
 EOF
 
-cat <<EOF > ~/scriptosd2.sh
+cat <<EOF > home/mjmarquespais/scriptosd2.sh
 #!/bin/bash
-sudo scp -i ~/.ssh/publicMethod /etc/ceph/ceph.conf publicMethod@10.204.0.11:/tmp/
-sudo ssh -i ~/.ssh/publicMethod publicMethod@10.204.0.11 "sudo mv /tmp/ceph.conf /etc/ceph/ceph.conf"
+sudo scp -i home/mjmarquespais/.ssh/publicMethod /etc/ceph/ceph.conf publicMethod@10.204.0.11:/tmp/
+sudo ssh -i home/mjmarquespais/.ssh/publicMethod publicMethod@10.204.0.11 "sudo mv /tmp/ceph.conf /etc/ceph/ceph.conf"
 
-sudo scp -i ~/.ssh/publicMethod /etc/ceph/ceph.client.admin.keyring publicMethod@10.204.0.11:/tmp/
-sudo ssh -i ~/.ssh/publicMethod publicMethod@10.204.0.11 "sudo mv /tmp/ceph.client.admin.keyring  /etc/ceph/ceph.client.admin.keyring"
+sudo scp -i home/mjmarquespais/.ssh/publicMethod /etc/ceph/ceph.client.admin.keyring publicMethod@10.204.0.11:/tmp/
+sudo ssh -i home/mjmarquespais/.ssh/publicMethod publicMethod@10.204.0.11 "sudo mv /tmp/ceph.client.admin.keyring  /etc/ceph/ceph.client.admin.keyring"
 
-sudo scp -i ~/.ssh/publicMethod /var/lib/ceph/bootstrap-osd/ceph.keyring publicMethod@10.204.0.11:/tmp/
-sudo ssh -i ~/.ssh/publicMethod publicMethod@10.204.0.11 "sudo mv /tmp/ceph.keyring /var/lib/ceph/bootstrap-osd/ceph.keyring"
+sudo scp -i home/mjmarquespais/.ssh/publicMethod /var/lib/ceph/bootstrap-osd/ceph.keyring publicMethod@10.204.0.11:/tmp/
+sudo ssh -i home/mjmarquespais/.ssh/publicMethod publicMethod@10.204.0.11 "sudo mv /tmp/ceph.keyring /var/lib/ceph/bootstrap-osd/ceph.keyring"
 EOF
 
 
 
-cat <<EOF > ~/script.sh
+cat <<EOF > home/mjmarquespais/script.sh
 #!/bin/bash
 sudo chown ceph. /etc/ceph/ceph.* /var/lib/ceph/bootstrap-osd/ceph.keyring
 sudo parted --script /dev/sdb 'mklabel gpt'
@@ -154,7 +157,7 @@ sudo ceph-volume lvm create --data /dev/sdb1
 EOF
 
 
-cat <<EOF > ~/scriptrdb.sh
+cat <<EOF > home/mjmarquespais/scriptrdb.sh
 #!/bin/bash
 sudo scp -i ~/.ssh/publicMethod /etc/ceph/ceph.conf publicMethod@10.204.0.14:/tmp/
 sudo ssh -i ~/.ssh/publicMethod publicMethod@10.204.0.14 "sudo mv /tmp/ceph.conf /etc/ceph/ceph.conf"
@@ -163,7 +166,7 @@ sudo scp -i ~/.ssh/publicMethod /etc/ceph/ceph.client.admin.keyring publicMethod
 sudo ssh -i ~/.ssh/publicMethod publicMethod@10.204.0.14 "sudo mv /tmp/ceph.client.admin.keyring  /etc/ceph/ceph.client.admin.keyring"
 EOF
 
-cat <<EOF > ~/scriptmgr.sh
+cat <<EOF > home/mjmarquespais/scriptmgr.sh
 #!/bin/bash
 sudo scp -i ~/.ssh/publicMethod /etc/ceph/ceph.conf publicMethod@10.204.0.13:/tmp/
 sudo ssh -i ~/.ssh/publicMethod publicMethod@10.204.0.13 "sudo mv /tmp/ceph.conf /etc/ceph/ceph.conf"
@@ -172,7 +175,7 @@ sudo scp -i ~/.ssh/publicMethod /etc/ceph/ceph.client.admin.keyring publicMethod
 sudo ssh -i ~/.ssh/publicMethod publicMethod@10.204.0.13 "sudo mv /tmp/ceph.client.admin.keyring  /etc/ceph/ceph.client.admin.keyring"
 EOF
 
-cat <<EOF > ~/scriptBUPmon.sh
+cat <<EOF > home/mjmarquespais/scriptBUPmon.sh
 #!/bin/bash
 # sudo rsync -av --delete --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod" publicMethod@10.204.0.14:~/backup/MON/cephconf /etc/ceph 
 sudo rsync -av --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod" publicMethod@10.204.0.14:~/backup/MON/cephconf/ /etc/ceph 
@@ -180,9 +183,9 @@ sudo rsync -av --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod" publicMethod@10
 sudo rsync -av --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod" publicMethod@10.204.0.14:~/backup/MON/cephvar/ /var/lib/ceph 
 EOF
 
-sudo chmod +x ~/scriptosd1.sh
-sudo chmod +x ~/scriptosd2.sh
-sudo chmod +x ~/script.sh
-sudo chmod +x ~/scriptrdb.sh
-sudo chmod +x ~/scriptmgr.sh
-sudo chmod +x ~/scriptBUPmon.sh
+sudo chmod +x home/mjmarquespais/scriptosd1.sh
+sudo chmod +x home/mjmarquespais/scriptosd2.sh
+sudo chmod +x home/mjmarquespais/script.sh
+sudo chmod +x home/mjmarquespais/scriptrdb.sh
+sudo chmod +x home/mjmarquespais/scriptmgr.sh
+sudo chmod +x home/mjmarquespais/scriptBUPmon.sh

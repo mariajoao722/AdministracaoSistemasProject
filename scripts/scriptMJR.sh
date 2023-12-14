@@ -3,10 +3,10 @@ sudo apt-get update
 sudo apt-get install -y ceph
 sudo apt-get install rsync
 
-ssh-keygen -C publicMethod4 -f ~/.ssh/publicMethod4 -N "" -q
+ssh-keygen -C publicMethod4 -f home/mjmarquespais/.ssh/publicMethod4 -N "" -q
 
 
-outfile=~/debug.txt
+outfile=home/mjmarquespais/debug.txt
 
 sudo mkdir /var/lib/ceph/mgr/ceph-mon
 
@@ -16,7 +16,7 @@ sudo ceph auth get-or-create mgr.mon mon 'allow profile mgr' osd 'allow *' mds '
 
 sudo ceph auth get-or-create mgr.mon | sudo tee /etc/ceph/ceph.mgr.admin.keyring
 
-cat <<EOF > ~/script.sh
+cat <<EOF > home/mjmarquespais/script.sh
 #!/bin/bash
 sudo chown ceph. /etc/ceph/ceph.*
 sudo cp /etc/ceph/ceph.mgr.admin.keyring /var/lib/ceph/mgr/ceph-mon/keyring
@@ -25,17 +25,17 @@ sudo chown -R ceph. /var/lib/ceph/mgr/ceph-mon
 sudo systemctl enable --now ceph-mgr@mon
 EOF
 
-sudo chmod +x ~/script.sh
+sudo chmod +x home/mjmarquespais/script.sh
 
-cat <<EOF > ~/scriptBUPmgr.sh
+cat <<EOF > home/mjmarquespais/scriptBUPmgr.sh
 #!/bin/bash
 
-sudo rsync -av --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod4" publicMethod4@10.204.0.14:~/backup/MGR/cephconf/ /etc/ceph
+sudo rsync -av --exclude='.ceph' -e "ssh -i home/mjmarquespais/.ssh/publicMethod4" publicMethod4@10.204.0.14:home/mjmarquespais/backup/MGR/cephconf/ /etc/ceph
 
-sudo rsync -av --exclude='.ceph' -e "ssh -i ~/.ssh/publicMethod4" publicMethod4@10.204.0.14:~/backup/MGR/cephvar/ /var/lib/ceph
+sudo rsync -av --exclude='.ceph' -e "ssh -i home/mjmarquespais/.ssh/publicMethod4" publicMethod4@10.204.0.14:home/mjmarquespais/backup/MGR/cephvar/ /var/lib/ceph
 EOF
 
-sudo chmod +x ~/scriptBUPmgr.sh
+sudo chmod +x home/mjmarquespais/scriptBUPmgr.sh
 
 echo "after2" | tee -a $outfile
 
