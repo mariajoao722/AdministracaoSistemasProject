@@ -533,9 +533,4 @@ To have connection to the database outside de vm we have the configure the web s
   - Check backup server configurations and connectivity to the Ceph cluster.
   - Ensure proper permissions and access to backup directories.
 
-## Students Info
-Project made by:
-- Maria João Marques Pais (up202308322)
-- Mónica Azevedo Araújo (up202005209)
-- Rafael Azevedo Alves (up202004476)
 
